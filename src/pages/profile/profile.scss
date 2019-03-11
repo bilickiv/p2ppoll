@@ -1,0 +1,58 @@
+page-profile {
+
+    .titleText{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        text-align: left;
+        transform: translate(-50%, -50%);
+    }
+
+    .profileData{
+        position: absolute;
+        min-width: 250px;
+        padding-top: 20px;
+        left: 50%;
+        transform: translate(-50%, 0%);
+    }
+
+    .item-md{
+        min-width: 250px;
+        padding: 0px;
+    }
+
+    .profPic{
+        border: 1px solid;
+        border-radius: 100px;
+        position: relative;
+        display: block;
+        margin: auto;
+    }
+
+    .firstListItem{
+        padding-top: 20px;
+    }
+
+    .changeButton{
+        margin: 0px; 
+        max-height: 15px;
+        transform: translateY(-1px);
+        padding-left: 20px;
+    }
+
+    .body{
+        background-image: linear-gradient(#4facfe, #00f2fe);
+    }
+
+    .item-md{
+        background-color: transparent;
+    }
+
+    .button-inner{
+        color: #ffffff;
+    }
+
+    .toolbar-title{
+        color: #ffffff;
+    }
+}

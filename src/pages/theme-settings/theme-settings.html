@@ -1,0 +1,50 @@
+<!--
+  Generated template for the ThemeSettingsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+
+<!-- No use-->
+<ion-header>
+  <ion-navbar color="theme">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title >Color Settings</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="body">
+
+  <ion-list >
+
+    <ion-list-header>
+      Choose the answer
+    </ion-list-header>
+
+    <ion-item>
+      <ion-label>Blue - Purple</ion-label>
+      <ion-checkbox [(ngModel)]="blue" color="dark" (click)="choose('blue')"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Red - Black</ion-label>
+      <ion-checkbox [(ngModel)]="red" color="dark" (click)="choose('red')"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Green - Black</ion-label>
+      <ion-checkbox [(ngModel)]="green" color="dark" (click)="choose('green')"></ion-checkbox>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Orange - Red</ion-label>
+      <ion-checkbox [(ngModel)]="orange" color="dark" (click)="choose('orange')"></ion-checkbox>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>

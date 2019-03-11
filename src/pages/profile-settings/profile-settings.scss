@@ -1,0 +1,24 @@
+page-profile-settings {
+ 
+    .titleText{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        text-align: left;
+        transform: translate(-50%, -50%);
+    }
+
+    
+    .changeButton{
+        margin: 0px; 
+        text-align: right;
+        max-height: 15px;
+        width: 100%;
+        float: right;
+        transform: translateY(-3px);
+    }
+
+    .body{
+        background-color: f4f4f4;
+    }
+}

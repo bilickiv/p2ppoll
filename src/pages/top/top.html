@@ -1,0 +1,77 @@
+<!--
+  Generated template for the TopPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+  <ion-navbar color="white">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title hideWhen="android">Connect</ion-title>
+    <ion-title hideWhen="ios" class="titleText">Connect</ion-title>
+    <ion-title hideWhen="ios" text-right> {{nickName}} </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content class="body">
+
+  <div id="mainDiv" class=""
+    style="position: absolute; left: 50%; top: 65%; transform: translate(-50%, -65%); min-width: 80%; min-height: 70%;">
+    <div style="position: absolute; top: 40%; left: 50%; transform:translate(-50%, -50%);">
+      <div *ngIf="empty" class="empty">
+        <p style="min-width: 250px;">No selected topic!</p>
+        <p style="min-width: 250px;">Settings -> Select Categories</p>
+      </div>
+      <div style="display: flex; justify-content: center; min-height: 32px;">
+        <p class="topStyle-1" (click)="openQuestionListPage(topics[14])">{{topics[14]}}</p>
+      </div>
+      <div style="display: flex; justify-content: center; ">
+        <div style="min-height: 0px;">
+          <p class="topStyle-2" style="text-align: right;" (click)="openQuestionListPage(topics[8])">{{topics[8]}}</p>
+          <p class="topStyle-2" style="text-align: right;" (click)="openQuestionListPage(topics[2])">{{topics[2]}}</p>
+        </div>
+        <p  class="topOverStyle" (click)="openQuestionListPage(topics[13])">{{topics[13]}}</p>
+      </div>
+      <div style="display: flex; justify-content: center;">
+        <p class="topStyle-1" (click)="openQuestionListPage(topics[9])">{{topics[9]}}</p>
+        <p class="topStyle-3" (click)="openQuestionListPage(topics[0])">{{topics[0]}}</p>
+      </div>
+      <div style="display: flex; justify-content: center;">
+        <p class="topStyle-3" (click)="openQuestionListPage(topics[1])">{{topics[1]}}</p>
+        <p class="topStyle-1" (click)="openQuestionListPage(topics[10])">{{topics[10]}}</p>
+      </div>
+      <div style="display: flex; justify-content: center; left: -2%; transform: translate(-2%, 0%); ">
+        <p class="topOverStyle" (click)="openQuestionListPage(topics[11])">{{topics[11]}}</p>
+        <div>
+          <p class="topStyle-2" (click)="openQuestionListPage(topics[3])">{{topics[3]}}</p>
+          <p class="topStyle-2" (click)="openQuestionListPage(topics[4])">{{topics[4]}}</p>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center; left: -2%; transform: translate(-2%, 0%); ">
+        <div>
+          <p  class="topStyle-2" style="text-align: right;" (click)="openQuestionListPage(topics[5])">
+            {{topics[5]}}</p>
+          <p  class="topStyle-2" style="text-align: right;" (click)="openQuestionListPage(topics[6])">
+            {{topics[6]}}</p>
+        </div>
+        <p  class="topOverStyle" (click)="openQuestionListPage(topics[12])">{{topics[12]}}</p>
+      </div>
+      <div style="display: flex; justify-content: center;">
+      </div>
+      <div style="display: flex; justify-content: center;">
+        <p class="topStyle-3" (click)="openQuestionListPage(topics[7])">{{topics[7]}}</p>
+      </div>
+    </div>
+  </div>
+
+
+  <ion-fab style="position: absolute; left: 90%; top: 90%; transform: translate(-90%, -90%);">
+    <button ion-fab color="primary" (click)="openNewQuestionPage()">
+      <ion-icon name="md-add"></ion-icon>
+    </button>
+  </ion-fab>
+
+</ion-content>

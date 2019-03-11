@@ -1,0 +1,119 @@
+page-question-list {
+
+  .titleText{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: left;
+    transform: translate(-50%, -50%);
+}
+
+  .questionListBody{
+    background-image: linear-gradient(#4facfe, #00f2fe);
+  }
+
+  .item-md.item-block .item-inner {
+     padding-right: 0px;
+     border: 0px solid;
+     word-wrap: break-word;
+     overflow-wrap: break-word;
+  }
+
+  .item-block item-md{
+    padding-left: 0px;
+  }
+
+  .question item item-block item-md{
+    padding-left: 0px;
+  }
+
+  .item-md{
+    padding: 0px;
+  }
+
+  .item{
+    padding-left: 0px;
+  }
+
+  .question{
+    border: 1px solid;
+    border-color: #4facfe;
+    border-radius: 15px;
+    height: 60px; 
+    width: 94%;
+    margin-right: 3%;
+    margin-left: 3%;
+    padding-left: 0px;
+    display: flex;
+    margin-top: 1%;
+    overflow: hidden;
+    color: #4facfe;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .userbox{
+    padding-top: 1px;
+    min-width: 25%;
+    max-width: 25%;
+    padding-left: 0px;
+    padding-bottom: 1px;
+    padding-right: 1px;
+    text-align: center;
+    color: #ffffff;
+    background-color: #4facfe;
+    clear: both;
+    display: table-cell;
+    overflow: hidden;
+  }
+
+  .questionbox{
+    min-width: 75%;
+    clear: both;
+    padding: 5px;
+    background-color: #ffffff;
+    display: table-cell;
+    vertical-align: middle;
+    line-height: 50px;
+    text-align: center;
+  }
+  
+  .questionbox p{
+    line-height: 1;
+    font-size: 15px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color:#000000; 
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .categories{
+    font-size: 9px;
+    color:#4facfe; 
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    margin-bottom: 3px;
+  }
+
+  .user{
+    color: #ffffff;
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+    min-width: 18%;
+    top: 100%;
+    transform: translate(0%, 150%);
+  }
+  
+  .time{
+    color: #000000;
+  }
+
+  .button-inner{
+    color: #ffffff;
+  }
+
+  .toolbar-title{
+      color: #ffffff;
+  }
+
+}

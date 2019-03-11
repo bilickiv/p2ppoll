@@ -1,0 +1,81 @@
+<!--
+  Generated template for the QuestionPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header no-border>
+  <ion-navbar transparent>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title style="color: #ffffff;">Question</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only style="padding-right: 10px;" (click)="reportQuestion()">
+        <ion-icon name="alert"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="save()">
+        <ion-icon name="bookmark"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding class="body">
+
+  <ion-card style="border-radius: 15px; height: 95%;">
+    <ion-card-content style="height: 100%;">
+      <div>
+        <h1 class="question">{{question}}?</h1>
+      </div>
+      <div class="author">
+        by: {{author}}
+      </div>
+
+      <ion-list radio-group class="container">
+
+        <ion-list-header>
+          Choose the answer
+        </ion-list-header>
+
+        <ion-item>
+          <ion-radio color="firstElement" value="first" checked="true" (click)="radio('first')"
+            [disabled]="!votePermission"></ion-radio>
+          <ion-label class="label">{{firstAnswer}}</ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-radio color="secondELement" value="second" (click)="radio('second')" [disabled]="!votePermission">
+          </ion-radio>
+          <ion-label class="label">{{secondAnswer}}</ion-label>
+        </ion-item>
+
+        <ion-item *ngIf="thirdOption">
+          <ion-radio color="thirdElement" value="third" (click)="radio('third')" [disabled]="!votePermission">
+          </ion-radio>
+          <ion-label class="label">{{thirdAnswer}}</ion-label>
+        </ion-item>
+
+      </ion-list>
+
+      <div class="buttons">
+
+        <div *ngIf="votePermission == true">
+          <button ion-button round outline (click)="voting()"><span class="button-inner"
+              style="color: #4facfe">Vote</span></button>
+        </div>
+
+        <div id="stat" *ngIf="votePermission == false">
+          <button ion-button round outline (click)="openStatisticsPage()" disable="true"><span class="button-inner"
+              style="color: #4facfe">Statistic</span></button>
+        </div>
+
+        <div>
+          <button ion-button clear (click)="cancel()"><span class="button-inner"
+              style="color: #4facfe">Cancel</span></button>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
