@@ -94,12 +94,12 @@ export class IndexPage {
               this.firstRunCheck = firstRun;
 
               if (this.firstRunCheck != 1) {
-                this.topicNameArray = ["animation", "animal", "book", "car", "city", "clothes", "computer",
-                  "country", "electronics", "ezoteric", "fitness", "food", "friend", "game", "healthy",
+                this.topicNameArray = ["animation", "animal", "book", "business", "car", "city", "clothes", "community", "computer",
+                  "country", "culture", "electronics", "ezoteric", "fashion", "fitness", "food", "friend", "game", "healthy",
                   "hobby", "home", "internet", "language", "learning", "life", "love", "money", "movie",
                   "music", "nature", "online", "phone", "photo", "problem", "programming",
-                  "relationship", "school", "science", "technology", "training", "transport", "travel",
-                  "tvseries", "university", "work"
+                  "relationship", "school", "science", "social", "technology", "training", "transport", "travel",
+                  "tvseries", "university", "video", "work"
                                              
                 ];
 

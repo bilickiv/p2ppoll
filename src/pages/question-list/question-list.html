@@ -11,11 +11,14 @@
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title >{{topicName}}
+    <ion-buttons end>
+      <button ion-button icon-only *ngIf="!isSearchbarOpened" (click)="isSearchbarOpened=true">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>{{topicName}}
     </ion-title>
   </ion-navbar>
-
- 
 
 </ion-header>
 
@@ -26,6 +29,9 @@
       refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
+
+  <ion-searchbar class="searchbar" (ionInput)="getItems($event)" *ngIf="isSearchbarOpened" showCancelButton="true"
+    (ionCancel)="isSearchbarOpened=false"></ion-searchbar>
 
   <div style="padding-top: 10px; padding-bottom: 5px;">
 
@@ -39,19 +45,37 @@
         <h4>Please wait...</h4>
       </ion-item>
 
-      <ion-item class="question" *ngFor="let item of items; let i = index" (click)="openQuestionPage(i)">
-        <ion-label class="label label-md" style="margin: 0px; white-space: inherit; ">
-          <div style="display: flex;">
-            <div class="userbox">
-              <p class="user">{{item.author}}</p>
+      <div *ngIf="!isSearchbarOpened">
+        <ion-item class="question" *ngFor="let item of items; let i = index" (click)="openQuestionPage(i)">
+          <ion-label class="label label-md" style="margin: 0px; white-space: inherit; ">
+            <div style="display: flex;">
+              <div class="userbox">
+                <p class="user">{{item.author}}</p>
+              </div>
+              <div class="questionbox">
+                <p>{{item.question}}?</p>
+                <h5 class="categories">categories: {{item.catOne}} {{item.catTwo}} {{item.catThree}}</h5>
+              </div>
             </div>
-            <div class="questionbox">
-              <p>{{item.question}}?</p>
-              <h5 class="categories">categories: {{item.catOne}} {{item.catTwo}} {{item.catThree}}</h5>
+          </ion-label>
+        </ion-item>
+      </div>
+
+      <div *ngIf="isSearchbarOpened">
+        <ion-item class="question" *ngFor="let sItem of searchItems; let s = index" (click)="openSearchedQuestionPage(s)">
+          <ion-label class="label label-md" style="margin: 0px; white-space: inherit; ">
+            <div style="display: flex;">
+              <div class="userbox">
+                <p class="user">{{sItem.author}}</p>
+              </div>
+              <div class="questionbox">
+                <p>{{sItem.question}}?</p>
+                <h5 class="categories">categories: {{sItem.catOne}} {{sItem.catTwo}} {{sItem.catThree}}</h5>
+              </div>
             </div>
-          </div>
-        </ion-label>
-      </ion-item>
+          </ion-label>
+        </ion-item>
+      </div>
     </ion-list>
   </div>
 

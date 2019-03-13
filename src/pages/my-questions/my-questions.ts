@@ -149,6 +149,9 @@ export class MyQuestionsPage {
         this.helper = this.items[this.actualIndex];
         this.updateQuestion(this.actualIndex);
 
+        if (this.thirdLabel == "") {
+          this.thirdLabel = "Not used"
+        }
 
         this.polarChart = new Chart(this.polarCanvas.nativeElement, {
 

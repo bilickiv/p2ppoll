@@ -59,8 +59,6 @@ export class StatisticsPage {
       } else {
         this.countryCard = false;
       }
-
-
     });
   }
 
