@@ -5,7 +5,7 @@
   Ionic pages and navigation.
 -->
 <ion-header no-border>
-    <ion-navbar color="primary">
+    <ion-navbar transparent>
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
           </button>
@@ -14,13 +14,13 @@
   </ion-header>
 
 
-  <ion-content >
+  <ion-content class="body">
 
-    <ion-list>
+    <ion-list tansparent>
       <ion-item *ngFor="let item of items; let i = index">
         <div>
-          <p style="position: absolute; text-align: left;">{{item.label}}</p>
-          <p style="text-align: right; float: right;">{{item.value}}</p>
+          <p style="position: absolute; text-align: left; color: #ffffff;">{{item.label}}</p>
+          <p style="text-align: right; float: right; color: #ffffff;">{{item.value}}</p>
         </div>
       </ion-item>
     </ion-list>

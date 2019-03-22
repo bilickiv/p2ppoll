@@ -32,13 +32,13 @@
         Voters of countries
       </ion-card-header>
       <ion-card-content>
-        <canvas #barCanvas height="250px"></canvas>
+        <canvas id="canvas" #barCanvas height="200px" ></canvas>
         <h5 style="text-align: right; text-decoration-line: underline; margin-top: 3px; margin-bottom: 3px;"
           (click)="openAllCountryPage()">All data</h5>
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="canvasCard" style=" margin-top: 16px;" *ngIf="countryCard == 1">
+    <ion-card class="canvasCard" style="margin-top: 16px;" *ngIf="countryCard == 1">
       <ion-card-header class="headTitle">
         Please select country name on settings!
       </ion-card-header>
@@ -74,11 +74,11 @@
     </div>
 
     <div style="display: flex;">
-      <ion-card class="simpleCard" style="background-color: #4facfe;">
-        <ion-card-header class="headTitle" style="color: #ffffff;">
+      <ion-card class="simpleCard" style="">
+        <ion-card-header class="headTitle">
           Author
         </ion-card-header>
-        <ion-card-content style="text-align: center; font-weight: bold; color: #ffffff;">
+        <ion-card-content style="text-align: center; font-weight: bold;">
           {{author}}
         </ion-card-content>
       </ion-card>

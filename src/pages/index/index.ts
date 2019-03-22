@@ -38,10 +38,12 @@ export class IndexPage {
   random: number;
   question: string;
 
+
   constructor(public navCtrl: NavController, public storage: Storage, public menuCtrl: MenuController, public alertCtrl: AlertController, public errHandler: ErrorHandler, public platform: Platform) {
   }
 
   ionViewWillEnter() {
+    
     console.log('ionViewWillEnter');
     this.initializeArrays();
     this.nicknameSetter();

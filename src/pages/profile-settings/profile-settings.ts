@@ -49,14 +49,14 @@ export class ProfileSettingsPage {
 
   select() {
     this.storage.set('country', this.country);
-    this.storage.set('changeCountry', this.changeCountry+1);
+    this.storage.set('changeCountry', this.changeCountry + 1);
     this.storage.set('changeMonth', this.month);
   }
 
-  dateSetter(){
-      let date: Date = new Date();
-      console.log("Date = " + date);
-      this.month = date.getMonth() + 1;
+  dateSetter() {
+    let date: Date = new Date();
+    console.log("Date = " + date);
+    this.month = date.getMonth() + 1;
   }
 
   /*
@@ -70,23 +70,23 @@ export class ProfileSettingsPage {
     this.storage.get('nickName').then((val) => {
       this.nickName = val;
     });
-    this.storage.get('changeMonth').then((changeMonth) =>{
-      this.storage.get('change').then((change)=>{
+    this.storage.get('changeMonth').then((changeMonth) => {
+      this.storage.get('change').then((change) => {
         this.changeMonth = changeMonth;
         console.log("month", this.changeMonth);
         this.changeCountry = change;
         console.log("change ", this.changeCountry);
-        if(this.changeMonth == this.month){
-          if(this.changeCountry >= 2){
+        if (this.changeMonth == this.month) {
+          if (this.changeCountry >= 2) {
             this.permission = false;
             console.log("permission ", this.permission);
           }
         }
       });
     });
-    this.storage.get('changeNickname').then((changeNickname)=>{
+    this.storage.get('changeNickname').then((changeNickname) => {
       this.changeNname = changeNickname;
-      if(this.changeNname >= 2){
+      if (this.changeNname > 2) {
         this.nPermission = false;
       }
     })
@@ -137,25 +137,27 @@ export class ProfileSettingsPage {
                   }
                 }
 
-                if (this.sameNickname) {
+                if (this.sameNickname && data.title == "") {
                   this.nickNameError();
                 } else {
-                  this.storage.set('nickName', data.title);
-                  this.nickName = data.title;
+                  
+                    this.storage.set('nickName', data.title);
+                    this.nickName = data.title;
 
-                  var jsonFile = {
-                    nickname: this.nickName
-                  };
+                    var jsonFile = {
+                      nickname: this.nickName
+                    };
 
-                  this.ref = firebase.database().ref("nicknames/");
-                  let newItem = this.ref.push();
-                  newItem.set(jsonFile);
+                    this.ref = firebase.database().ref("nicknames/");
+                    let newItem = this.ref.push();
+                    newItem.set(jsonFile);
 
-                  console.log("oldNickname" + this.oldNickName);
-                  console.log("deletedData: " + this.deletedData);
+                    console.log("oldNickname" + this.oldNickName);
+                    console.log("deletedData: " + this.deletedData);
 
-                  firebase.database().ref("nicknames/" + this.deletedData.key).remove(); // Delete old nickname from database
-                  this.storage.set('changeNickname', this.changeNname+1);
+                    firebase.database().ref("nicknames/" + this.deletedData.key).remove(); // Delete old nickname from database
+                    this.storage.set('changeNickname', this.changeNname + 1);
+                    this.navCtrl.pop();
                 }
               }).catch(err => {
                 console.log('Error');
@@ -170,7 +172,7 @@ export class ProfileSettingsPage {
   nickNameError() {
     const alert = this.alertCtrl.create({
       title: 'Failed',
-      subTitle: 'This nickname is already taken!',
+      subTitle: 'This nickname is already taken or empty field!',
       buttons: [
         {
           text: 'Ok',

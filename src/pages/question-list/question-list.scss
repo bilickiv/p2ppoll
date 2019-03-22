@@ -9,7 +9,7 @@ page-question-list {
 }
 
   .questionListBody{
-    background-image: linear-gradient(#4facfe, #00f2fe);
+    background-image: linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(33,152,214,1) 100.2% );
   }
 
   .item-md.item-block .item-inner {
@@ -38,7 +38,7 @@ page-question-list {
   .question{
     border: 1px solid;
     border-color: #4facfe;
-    border-radius: 15px;
+    border-radius: 25px;
     height: 60px; 
     width: 94%;
     margin-right: 3%;
@@ -80,7 +80,7 @@ page-question-list {
   
   .questionbox p{
     line-height: 1;
-    font-size: 15px;
+    font-size: 13px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color:#000000; 
     display: inline-block;
@@ -96,12 +96,17 @@ page-question-list {
 
   .user{
     color: #ffffff;
+    font-size: 12px;
     padding: 0px;
     margin: 0px;
     text-align: center;
+    vertical-align: middle;
     min-width: 18%;
-    top: 100%;
-    transform: translate(0%, 150%);
+    position: relative;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
   }
   
   .time{

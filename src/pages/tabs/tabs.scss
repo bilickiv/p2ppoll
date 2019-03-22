@@ -1,4 +1,69 @@
 page-tabs {
 
+    .tabbar.show-tabbar{
+        opacity: 0.8;
+    }
+
+    .tabs-md .tab-button[aria-selected=true][aria-controls=tabpanel-t0-0] {
+      color: #f53d3d;
+      padding: 0;
+    }
+  
+    .tabs-md .tab-button-icon[aria-label=flame][ng-reflect-is-active=true] {
+      color: #f53d3d;
+      padding: 0;
+    }
+
+    .tabs-ios .tab-button[aria-selected=true][aria-controls=tabpanel-t0-0] {
+      color: #f53d3d;
+      padding: 0;
+    }
+  
+    .tabs-ios .tab-button-icon[aria-label=flame][ng-reflect-is-active=true] {
+      color: #f53d3d;
+      padding: 0;
+    }
+
+    
+    .tabs-md .tab-button[aria-selected=true][aria-controls=tabpanel-t0-1] {
+      color: rgba(30,161,239,1);
+      padding: 0;
+    }
+  
+    .tabs-md .tab-button-icon[aria-label=home][ng-reflect-is-active=true] {
+      color: rgba(30,161,239,1);
+      padding: 0;
+    }
+
+    .tabs-ios .tab-button[aria-selected=true][aria-controls=tabpanel-t0-1] {
+      color: rgba(30,161,239,1);
+      padding: 0;
+    }
+  
+    .tabs-ios .tab-button-icon[aria-label=home][ng-reflect-is-active=true] {
+      color: rgba(30,161,239,1);
+      padding: 0;
+    }
+
+
+    .tabs-md .tab-button[aria-selected=true][aria-controls=tabpanel-t0-2] {
+      color: #551A8B;
+      padding: 0;
+    }
+
+    .tabs-md .tab-button-icon[aria-label=trending\ up][ng-reflect-is-active=true] {
+      color: #551A8B;
+      padding: 0;
+    }
+
+    .tabs-ios .tab-button[aria-selected=true][aria-controls=tabpanel-t0-2] {
+      color: #551A8B;
+      padding: 0;
+    }
+
+    .tabs-ios .tab-button-icon[aria-label=trending\ up][ng-reflect-is-active=true] {
+      color: #551A8B;
+      padding: 0;
+    }
 
 }

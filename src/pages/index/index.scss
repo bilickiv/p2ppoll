@@ -1,5 +1,21 @@
 page-index {
 
+    .toolbar-title-md {
+        color: #ffffff;
+    }
+
+    .toolbar-title-ios {
+        color: #ffffff;
+    }
+
+    .fab-md-white {
+        color: rgba(30,161,239,1);
+    }
+
+    .fab-ios-white {
+        color: rgba(30,161,239,1);
+    }
+
     .bar {
         border: 0px !important;
         border-bottom-color: transparent !important;
@@ -8,7 +24,7 @@ page-index {
     }
 
     .body{
-        background-color: #ffffff;
+        background-image: linear-gradient( 111.5deg, rgba(20,100,196,1) 0.4%, rgba(33,152,214,1) 100.2% );
     }
 
     .profile{
@@ -43,6 +59,7 @@ page-index {
 
     .pStyle-1{
         margin: 0px;
+        color: #ffffff;
         padding-right: 1px;
         padding-left: 1px;
         font-size: 8vw;
@@ -56,6 +73,7 @@ page-index {
 
     .pStyle-2{
         margin: 0px;
+        color: #ffffff;
         padding-left: 1px;
         padding-right: 1px;
         padding-top: 1px;
@@ -68,6 +86,7 @@ page-index {
 
     .pStyle-3{
         margin: 0px;
+        color: #ffffff;
         padding-right: 1px;
         padding-left: 1px;
         padding-top: 1px;
@@ -81,6 +100,7 @@ page-index {
 
     .overStyle{
         margin: 0px;
+        color: #ffffff;
         padding-left: 1px;
         padding-right: 1px;
         padding-top: 1px;
@@ -91,7 +111,7 @@ page-index {
     }
 
     .animatedStyle-1{
-        color: #4facfe;
+        color: #ffffff;
         margin: 0px;
         padding-right: 1px;
         padding-left: 1px;
@@ -106,7 +126,7 @@ page-index {
     }
 
     .animatedStyle-2{
-        color: #4facfe;
+        color: #ffffff;
         margin: 0px;
         padding-left: 1px;
         padding-right: 1px;
@@ -121,7 +141,7 @@ page-index {
     }
 
     .animatedStyle-3{      
-        color: #4facfe;
+        color: #ffffff;
         margin: 0px;
         padding-right: 1px;
         padding-left: 1px;
@@ -146,7 +166,7 @@ page-index {
         max-height: 12vw;
         font-family: 'Times New Roman', Times, serif;
         font-size: 12vw;
-        color: #4facfe;
+        color: #ffffff;
         animation:
             upMove 2s infinite;
     }

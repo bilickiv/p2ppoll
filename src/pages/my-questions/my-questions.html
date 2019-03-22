@@ -36,7 +36,7 @@
           Voters of countries
         </ion-card-header>
         <ion-card-content>
-          <canvas #barCanvas height="250px"></canvas>
+          <canvas #barCanvas height="200px"></canvas>
           <h5 style="text-align: right; text-decoration-line: underline; margin-top: 3px; margin-bottom: 3px;"
           (click)="openAllCountryPage()">All data</h5>
         </ion-card-content>
@@ -44,9 +44,9 @@
     
     </ion-content>
     
-    <ion-footer>
+    <ion-footer style="opacity: 0.8;">
       <ion-toolbar>
-        <div style=" position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div style=" position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.7;">
           <div style="display: flex;">
             <div style="margin-right: 20px;">
               <button ion-button round [disabled]="previousButton" (click)="previous()">

@@ -43,6 +43,7 @@ export class HotThemesPage {
   actualDay: any;
   topicsHelper = new Array();
 
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage) {
   }
 
@@ -73,73 +74,76 @@ export class HotThemesPage {
 
 
   initializeTopics() {
-      this.ref = firebase.database().ref('news/');
-      this.ref
-        .once('value')
-        .then(res => {
-          this.news = convertArray(res);
+    this.ref = firebase.database().ref('news/');
+    this.ref
+      .once('value')
+      .then(res => {
+        this.news = convertArray(res);
 
-          let date: Date = new Date();
-          this.actualDay = +date.getDate();
+        let date: Date = new Date();
+        this.actualDay = +date.getDate();
 
-          for (let prop in this.news) {
-            this.topicNameArray.push(this.news[prop].topic);
-            this.topicTimeArray.push(this.news[prop].uploadDate);
+        for (let prop in this.news) {
+          this.topicNameArray.push(this.news[prop].topic);
+          this.topicTimeArray.push(this.news[prop].uploadDate);
+        }
+
+        //Firebase jelenlegi tárolása szerint, pontok mentén lehet vágni
+        var i, j, k, tmp;
+
+        j = 0;
+        k = 0;
+        for (let prop in this.topicTimeArray) {
+          this.helperString = this.topicTimeArray[prop];
+          var splitted = this.helperString.split(".", 5);
+          this.day[prop] = +splitted[0];
+          this.month[prop] = +splitted[1];
+          this.year[prop] = +splitted[2];
+          this.hour[prop] = +splitted[3];
+          this.minute[prop] = +splitted[4];
+          if (this.day[prop] == this.actualDay) {
+            this.topics[j] = this.topicNameArray[prop];
+            this.dailyTopicsHours[j] = this.hour[prop];
+            j++;
+          } else {
+            this.plusTopics[k] = this.topicNameArray[prop];
+            k++;
           }
+        }
 
-          //Firebase jelenlegi tárolása szerint, pontok mentén lehet vágni
-          var i, j, k, tmp;
+        for (i = this.topics.length - 1; 0 < i; --i) {
+          for (j = 0; j < i; ++j) {
+            if (this.dailyTopicsHours[j] < this.dailyTopicsHours[j + 1]) {
+              tmp = this.topics[j];
+              this.topics[j] = this.topics[j + 1];
+              this.topics[j + 1] = tmp;
 
-          j = 0;
-          k = 0;
-          for (let prop in this.topicTimeArray) {
-            this.helperString = this.topicTimeArray[prop];
-            var splitted = this.helperString.split(".", 5);
-            this.day[prop] = +splitted[0];
-            this.month[prop] = +splitted[1];
-            this.year[prop] = +splitted[2];
-            this.hour[prop] = +splitted[3];
-            this.minute[prop] = +splitted[4];
-            if (this.day[prop] == this.actualDay) {
-              this.topics[j] = this.topicNameArray[prop];
-              this.dailyTopicsHours[j] = this.hour[prop];
-              j++;
-            } else {
-              this.plusTopics[k] = this.topicNameArray[prop];
-              k++;
+              tmp = this.dailyTopicsHours[j];
+              this.dailyTopicsHours[j] = this.dailyTopicsHours[j + 1];
+              this.dailyTopicsHours[j + 1] = tmp;
             }
           }
+        }
 
-          for (i = this.topics.length - 1; 0 < i; --i) {
-            for (j = 0; j < i; ++j) {
-              if (this.dailyTopicsHours[j] < this.dailyTopicsHours[j + 1]) {
-                tmp = this.topics[j];
-                this.topics[j] = this.topics[j + 1];
-                this.topics[j + 1] = tmp;
+        if (this.topics.length < 15) {
+          for (i = 0; this.topics.length != 15; i++) {
+            this.topics.push(this.plusTopics[i]);
+          }
+        }
 
-                tmp = this.dailyTopicsHours[j];
-                this.dailyTopicsHours[j] = this.dailyTopicsHours[j + 1];
-                this.dailyTopicsHours[j + 1] = tmp;
-              }
+        for (i = this.topics.length - 1; 0 < i; --i) { //Sort by text length
+          for (j = 0; j < i; ++j) {
+            if (this.topics[j].length < this.topics[j + 1].length) {
+              tmp = this.topics[j];
+              this.topics[j] = this.topics[j + 1];
+              this.topics[j + 1] = tmp;
             }
           }
+        }
+      }).catch(err => {
+        console.log('websocket');
+      });
 
-          if (this.topics.length < 15) {
-            for (i = 0; this.topics.length != 15; i++) {
-              this.topics.push(this.plusTopics[i]);
-            }
-          }
-
-          for (i = this.topics.length - 1; 0 < i; --i) { //Sort by text length
-            for (j = 0; j < i; ++j) {
-              if (this.topics[j].length < this.topics[j + 1].length) {
-                tmp = this.topics[j];
-                this.topics[j] = this.topics[j + 1];
-                this.topics[j + 1] = tmp;
-              }
-            }
-          }
-        });
   }
 
 
@@ -151,7 +155,5 @@ export class HotThemesPage {
     this.storage.set('topic', topicName);
     this.navCtrl.push(QuestionListPage);
   }
-
-
 
 }

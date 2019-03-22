@@ -215,24 +215,22 @@ export class QuestionPage {
         this.answer = "third";
         this.jsonArray[7] = this.thirdValue;
       }
+      this.jsonArray[11] = this.actualDate;
+      this.storage.set('jsonArray', this.jsonArray);
 
       this.voteTopic(this.catOne, this.answer, "one");
 
-      this.jsonArray[11] = this.actualDate;
       this.votedQuestionIds.push(this.id);
       this.storage.set('votedQuestionIds', this.votedQuestionIds);
-      this.storage.set('jsonArray', this.jsonArray);
       this.storage.get('voteNumber').then((val) => {
         this.myVoteValue = val;
         this.myVoteValue++;
         this.storage.set('voteNumber', this.myVoteValue);
       });
-      this.openStatisticsPage();
     } else {
       this.showAlert("vote denied");
     }
   }
-
 
   /*
   * This method set values on firebase. The end character in firebase record(countries, coValues): , 
@@ -287,20 +285,21 @@ export class QuestionPage {
             helperString = "";
             for (i = 0; i < firebaseCoValues.length; i++) {
               if (firebaseCoValues[i] == ",") {
-                if (this.newCountry == false && j == this.matchedIndex) {
-                  this.coNumber = +helperString; 
-                  this.coNumber++;
-                  this.coValuesArray[j] = this.coNumber.toString();
-                } else {
-                  this.coValuesArray[j] = helperString;
-                  j++;
-                  helperString = "";
-                }
+                this.coValuesArray[j] = helperString;
+                helperString = "";
+                j++;
               } else {
                 helperString = helperString + firebaseCoValues[i];
               }
             }
 
+            if (!this.newCountry) {
+              let number = this.coValuesArray[this.matchedIndex];
+              ++number;
+              this.coValuesArray[this.matchedIndex] = number;
+            }
+
+            console.log(this.coValuesArray);
             this.finalCoValues = "";
             this.finalCountries = "";
 
@@ -309,7 +308,7 @@ export class QuestionPage {
               this.finalCoValues = this.finalCoValues + this.coValuesArray[i] + ",";
             }
 
-            if (this.newCountry == true) {
+            if (this.newCountry && this.myCountry != "Hidden") {
               this.finalCountries = this.finalCountries + this.myCountry + ",";
               this.finalCoValues = this.finalCoValues + "1" + ",";
             }
@@ -320,18 +319,20 @@ export class QuestionPage {
               firebase.database().ref(this.corrTopicName + this.helper.key).update({ coValues: this.finalCoValues });
             }
 
-            this.storage.set('finalCountries', this.finalCountries);
-            this.storage.set('finalCoValues', this.finalCoValues);
 
             //Async!!, it's important to be here. Reason -> firebase
             if (actual == "one") {
+              this.jsonArray[15] = this.finalCountries;
+              this.jsonArray[16] = this.finalCoValues;
+              this.storage.set('jsonArray', this.jsonArray);
+              this.openStatisticsPage();
               if (this.catTwo != "" && this.catTwo != null && this.catTwo != undefined) {
                 this.voteTopic(this.catTwo, this.answer, "two");
               }
             }
 
             //Async!!, it's important to be here. Reason -> firebase
-            if(actual == "two"){
+            if (actual == "two") {
               if (this.catThree != "" && this.catThree != null && this.catThree != undefined) {
                 this.voteTopic(this.catThree, this.answer, "three");
               }
@@ -341,6 +342,7 @@ export class QuestionPage {
         }
       }).catch(err => {
         console.log(err);
+        this.openStatisticsPage();
       });
   }
 

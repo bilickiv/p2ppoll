@@ -31,16 +31,7 @@ export class TabsPage {
   }
 
   ionViewWillEnter(){
-    this.storage.get('themeColor').then((val)=>{
-      this.theme = val;
-    });
-    this.storage.get('refresh').then((val) => {
-      if (val) {
-        this.storage.set('refresh', false);
-        console.log('theme: ' + this.theme);
-        this.navCtrl.setRoot(TabsPage);
-      }
-    });
+   
   }
 
   ionViewDidLoad() {

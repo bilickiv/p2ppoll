@@ -184,9 +184,9 @@ export class MyQuestionsPage {
               label: '',
               data: [],
               backgroundColor: [
-                'rgba(17, 100, 102, 0.7)',
-                'rgba(241, 90, 34, 0.7)',
-                'rgba(128, 0, 0, 0.7)',
+                'rgba(255, 255, 0, 0.6)',
+                'rgba(30,161,239,0.6)',
+                'rgba(0, 240, 15, 0.6)',
                 'rgba(80, 219, 149, 0.5)',
                 'rgba(47, 47, 162, 0.5)',
                 'rgba(255, 195, 0, 0.8)',

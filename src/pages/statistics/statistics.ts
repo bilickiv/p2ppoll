@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
 
 import { AllCountryPage } from '../all-country/all-country';
+import { ProfileSettingsPage } from '../profile-settings/profile-settings';
 
 
 /**
@@ -42,6 +43,9 @@ export class StatisticsPage {
   countryIf: any;
   thirdLabel: string;
 
+  canvasSizeHelper: boolean;
+
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage) {
     this.countryIf = true;
   }
@@ -60,6 +64,10 @@ export class StatisticsPage {
         this.countryCard = false;
       }
     });
+  }
+
+  goSettings() {
+    this.navCtrl.push(ProfileSettingsPage);
   }
 
   chartDraw() {
@@ -108,117 +116,106 @@ export class StatisticsPage {
           }]
         }
       });
-    });
 
-    this.barChart = new Chart(this.barCanvas.nativeElement, {
 
-      type: 'bar',
-      data: {
-        labels: [],
-        datasets: [{
-          label: 'Vote number',
-          data: [],
-          backgroundColor: [
-            'rgba(17, 100, 102, 0.7)',
-            'rgba(241, 90, 34, 0.7)',
-            'rgba(128, 0, 0, 0.7)',
-            'rgba(80, 219, 149, 0.5)',
-            'rgba(47, 47, 162, 0.5)',
-            'rgba(255, 195, 0, 0.8)',
-            'rgba(21, 79, 255, 0.8)',
-            'rgba(88, 24, 69, 0.8)'
-          ],
-        }]
-      },
-      options: {
-        legend: { display: false },
-        title: {
-          display: true,
-          text: ''
+      this.barChart = new Chart(this.barCanvas.nativeElement, {
+
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Vote number',
+            data: [],
+            backgroundColor: [
+              'rgba(255, 255, 0, 0.6)',
+              'rgba(30,161,239,0.6)',
+              'rgba(0, 240, 15, 0.6)',
+              'rgba(80, 219, 149, 0.5)',
+              'rgba(47, 47, 162, 0.5)',
+              'rgba(255, 195, 0, 0.8)',
+              'rgba(21, 79, 255, 0.8)',
+              'rgba(88, 24, 69, 0.8)'
+            ],
+          }]
         },
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true,
-              userCallback: function(label, index, labels) {
-                // when the floored value is the same as the value we have a whole number
-                if (Math.floor(label) === label) {
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: ''
+          },
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                userCallback: function (label, index, labels) {
+                  // when the floored value is the same as the value we have a whole number
+                  if (Math.floor(label) === label) {
                     return label;
+                  }
                 }
               }
-            }
-          }]
-        }
-       
-      }
-    });
-
-    this.addChartData();
-
-  }
-
-  addChartData() {
-    this.storage.get('finalCountries').then((countries) => {
-      this.storage.get('finalCoValues').then((coValues) => {
-
-        var i, j, tmp;
-        j = 0;
-        let helperString = "";
-        for (i = 0; i < countries.length; i++) {
-          if (countries[i] == ",") {
-            this.countriesArray[j] = helperString;
-            j++;
-            helperString = "";
-          } else {
-            helperString = helperString + countries[i];
+            }]
           }
+
         }
-
-        j = 0;
-        helperString = "";
-        for (i = 0; i < coValues.length; i++) {
-          if (coValues[i] == ",") {
-            this.coValuesArray[j] = helperString;
-            j++;
-            helperString = "";
-          } else {
-            helperString = helperString + coValues[i];
-          }
-        }
-
-        for (i = 0; i < this.coValuesArray.length; i++) {  //Convert string to int
-          this.coValuesArray[i] = +this.coValuesArray[i];
-        }
-
-        for (i = this.coValuesArray.length - 1; 0 < i; --i) { // Bubble sort
-          for (j = 0; j < i; ++j) {
-            if (this.coValuesArray[j] < this.coValuesArray[j + 1]) {
-
-              tmp = this.countriesArray[j];
-              this.countriesArray[j] = this.countriesArray[j + 1];
-              this.countriesArray[j + 1] = tmp;
-
-              tmp = this.coValuesArray[j];
-              this.coValuesArray[j] = this.coValuesArray[j + 1];
-              this.coValuesArray[j + 1] = tmp;
-
-            }
-          }
-        }
-
-        for (i = 0; i < 3; i++) {
-          if (this.countriesArray[i] != null && this.countriesArray[i] != undefined) {
-            this.barChart.data.datasets[0].data[i] = +this.coValuesArray[i];
-            this.barChart.data.labels[i] = this.countriesArray[i];
-            this.barChart.update();
-          }
-        }
-
-        if (this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null) {
-          this.countryIf = false;
-        }
-
       });
+
+      var i, j, tmp;
+      j = 0;
+      let helperString = "";
+      for (i = 0; i < val[15].length; i++) {
+        if (val[15][i] == ",") {
+          this.countriesArray[j] = helperString;
+          j++;
+          helperString = "";
+        } else {
+          helperString = helperString + val[15][i];
+        }
+      }
+
+      j = 0;
+      helperString = "";
+      for (i = 0; i < val[16].length; i++) {
+        if (val[16][i] == ",") {
+          this.coValuesArray[j] = helperString;
+          j++;
+          helperString = "";
+        } else {
+          helperString = helperString + val[16][i];
+        }
+      }
+
+      for (i = 0; i < this.coValuesArray.length; i++) {  //Convert string to int
+        this.coValuesArray[i] = +this.coValuesArray[i];
+      }
+
+      for (i = this.coValuesArray.length - 1; 0 < i; --i) { // Bubble sort
+        for (j = 0; j < i; ++j) {
+          if (this.coValuesArray[j] < this.coValuesArray[j + 1]) {
+            tmp = this.countriesArray[j];
+            this.countriesArray[j] = this.countriesArray[j + 1];
+            this.countriesArray[j + 1] = tmp;
+
+            tmp = this.coValuesArray[j];
+            this.coValuesArray[j] = this.coValuesArray[j + 1];
+            this.coValuesArray[j + 1] = tmp;
+          }
+        }
+      }
+
+      for (i = 0; i < 3; i++) {
+        if (this.countriesArray[i] != null && this.countriesArray[i] != undefined) {
+          this.barChart.data.datasets[0].data[i] = +this.coValuesArray[i];
+          this.barChart.data.labels[i] = this.countriesArray[i];
+          this.barChart.update();
+        }
+      }
+
+      if (this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null) {
+        this.countryIf = false;
+      }
+
     });
   }
 

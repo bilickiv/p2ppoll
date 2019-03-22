@@ -33,9 +33,7 @@
   <ion-searchbar class="searchbar" (ionInput)="getItems($event)" *ngIf="isSearchbarOpened" showCancelButton="true"
     (ionCancel)="isSearchbarOpened=false"></ion-searchbar>
 
-  <div style="padding-top: 10px; padding-bottom: 5px;">
-
-    <ion-list style="padding-right: 0px;">
+    <ion-list style="padding-right: 0px; ">
 
       <ion-item text-center *ngIf="refresh">
         <h4>Please refresh!</h4>
@@ -77,6 +75,6 @@
         </ion-item>
       </div>
     </ion-list>
-  </div>
+  
 
 </ion-content>

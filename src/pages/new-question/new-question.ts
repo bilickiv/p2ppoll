@@ -124,11 +124,11 @@ export class NewQuestionPage {
   }
 
 
-  send() { //  question, ( first, second, three )x2, author, report, datex2
-    this.question = this.question.replace(/\?/g, "");
+  send() { //  question, ( first, second, three )x2, author, report, datex
 
-    if (this.question.match(/^[A-Za-z0-9\s-\,]+$/) && this.question.length >= 3) {
-      if (this.question != null && this.firstAnswer != null && this.secondAnswer != null && this.catOne != null && this.nickName != "Anonym") {
+    if (this.question != null && this.firstAnswer != null && this.secondAnswer != null && this.catOne != null && this.nickName != "Anonym") {
+      this.question = this.question.replace(/\?/g, "");
+      if (this.question.match(/^[A-Za-z0-9\s-\,]+$/) && this.question.length >= 3) {
         if (this.firstAnswer != this.secondAnswer && this.secondAnswer != this.thirdAnswer && this.firstAnswer != this.thirdAnswer) {
           if (this.limitNumber < 4) {
             this.idGenerator();
@@ -249,10 +249,10 @@ export class NewQuestionPage {
           this.showAlert("same");
         }
       } else {
-        this.showAlert("missing");
+        this.showAlert("alphabet");
       }
-    }else{
-      this.showAlert("alphabet");
+    } else {
+      this.showAlert("missing");
     }
 
   }
@@ -336,7 +336,7 @@ export class NewQuestionPage {
     if (reason == "alphabet") {
       const alert = this.alertCtrl.create({
         title: 'Attention',
-        subTitle: 'Please use alphabet characters, or: \' \', \'-\', \',\'!',
+        subTitle: 'Please use alphabet characters, and: \' \', \'-\', \',\'!',
         buttons: ['OK']
       });
       alert.present();

@@ -7,6 +7,25 @@ page-hot-themes {
         text-align: left;  
     }
 
+    .toolbar-title-md {
+        color: #ffffff;
+    }
+
+    .toolbar-title-ios {
+        color: #ffffff;
+    }
+
+    .fab-md-white {
+        color: rgba(128,0,0,1);
+    }
+
+    .fab-ios-white {
+        color: rgba(128,0,0,1);
+    }
+
+    .body{
+        background-image: linear-gradient( 112.4deg,  rgba(170,0,0,1) -5.8%, rgba(128,0,0,1) 100.2% );
+    }
 
         .bar {
             border: 0px !important;
@@ -57,7 +76,7 @@ page-hot-themes {
             padding-top: 1px;
             padding-bottom: 1px;
             max-height: 8vw;
-            color: #4facfe;
+            color: #ffffff;
             text-transform: uppercase;
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
             
@@ -65,6 +84,7 @@ page-hot-themes {
     
         .hotpStyle-2{
             margin: 0px;
+            color: #ffffff;
             padding-left: 1px;
             padding-right: 1px;
             padding-top: 1px;
@@ -77,6 +97,7 @@ page-hot-themes {
     
         .hotpStyle-3{
             margin: 0px;
+            color: #ffffff;
             padding-right: 1px;
             padding-left: 1px;
             padding-top: 1px;
@@ -95,10 +116,12 @@ page-hot-themes {
             padding-top: 1px;
             padding-bottom: 1px;
             max-height: 12vw;
-            color: #551A8B;
+            color: #ffffff;
             font-family: 'Times New Roman', Times, serif;
             font-size: 12vw;
         }
+
+
   
     
     }
