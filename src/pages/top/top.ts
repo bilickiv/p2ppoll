@@ -50,9 +50,7 @@ export class TopPage {
   }
 
   ionViewWillEnter() {
-    this.storage.get('nickName').then((val) => {
-      this.nickName = val;
-    });
+    this.nickName = localStorage.getItem('nickName');
     this.topicsHelper = [];
     this.topicNameArray = [];
     this.topicNumberArray = [];
@@ -69,52 +67,48 @@ export class TopPage {
     this.initializeTopics();
   }
 
-
   initializeTopics() {
-      this.ref = firebase.database().ref('news/');
-      this.ref
-        .once('value')
-        .then(res => {
-          this.news = convertArray(res);
+    this.ref = firebase.database().ref('news/');
+    this.ref
+      .once('value')
+      .then(res => {
+        this.news = convertArray(res);
 
-          for (let prop in this.news) {
-            this.topicNameArray.push(this.news[prop].topic);
-            this.topicNumberArray.push(+this.news[prop].topics);
-          }
+        for (let prop in this.news) {
+          this.topicNameArray.push(this.news[prop].topic);
+          this.topicNumberArray.push(+this.news[prop].topics);
+        }
 
-          //Firebase jelenlegi tárolása szerint, pontok mentén vágva
-          var i, j, tmp;
+        //Firebase jelenlegi tárolása szerint, pontok mentén vágva
+        var i, j, tmp;
 
-          for (i = this.topicNumberArray.length - 1; 0 < i; --i) { //Sort by text length
-            for (j = 0; j < i; ++j) {
-              if (this.topicNumberArray[j] < this.topicNumberArray[j + 1]) {
-                tmp = this.topicNumberArray[j];
-                this.topicNumberArray[j] = this.topicNumberArray[j + 1];
-                this.topicNumberArray[j + 1] = tmp;
-
-                tmp = this.topicNameArray[j];
-                this.topicNameArray[j] = this.topicNameArray[j + 1];
-                this.topicNameArray[j + 1] = tmp;
-              }
+        for (i = this.topicNumberArray.length - 1; 0 < i; --i) { //Sort by text length
+          for (j = 0; j < i; ++j) {
+            if (this.topicNumberArray[j] < this.topicNumberArray[j + 1]) {
+              tmp = this.topicNumberArray[j];
+              this.topicNumberArray[j] = this.topicNumberArray[j + 1];
+              this.topicNumberArray[j + 1] = tmp;
+              tmp = this.topicNameArray[j];
+              this.topicNameArray[j] = this.topicNameArray[j + 1];
+              this.topicNameArray[j + 1] = tmp;
             }
           }
+        }
 
-          for(i = 0; i<15; i++){
-            this.topics[i] = this.topicNameArray[i];
-          }
+        for (i = 0; i < 15; i++) {
+          this.topics[i] = this.topicNameArray[i];
+        }
 
-         
-         
-          for (i = this.topics.length - 1; 0 < i; --i) { //Sort by text length
-            for (j = 0; j < i; ++j) {
-              if (this.topics[j].length < this.topics[j + 1].length) {
-                tmp = this.topics[j];
-                this.topics[j] = this.topics[j + 1];
-                this.topics[j + 1] = tmp;
-              }
+        for (i = this.topics.length - 1; 0 < i; --i) { //Sort by text length
+          for (j = 0; j < i; ++j) {
+            if (this.topics[j].length < this.topics[j + 1].length) {
+              tmp = this.topics[j];
+              this.topics[j] = this.topics[j + 1];
+              this.topics[j + 1] = tmp;
             }
           }
-        });
+        }
+      });
   }
 
 
@@ -123,7 +117,7 @@ export class TopPage {
   }
 
   openQuestionListPage(topicName: string) {
-    this.storage.set('topic', topicName);
+    localStorage.setItem('topic', topicName);
     this.navCtrl.push(QuestionListPage);
   }
 

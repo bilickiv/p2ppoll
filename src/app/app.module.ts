@@ -27,7 +27,6 @@ import { TagCloudModule } from 'angular-tag-cloud-module';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { GooglePlus } from '@ionic-native/google-plus';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -93,7 +92,6 @@ firebase.initializeApp(CONFIG);
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    GooglePlus,
   ]
 })
 export class AppModule {}

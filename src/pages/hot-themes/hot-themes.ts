@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { NewQuestionPage } from '../new-question/new-question';
 import { QuestionListPage } from '../question-list/question-list';
 
@@ -42,9 +41,11 @@ export class HotThemesPage {
 
   actualDay: any;
   topicsHelper = new Array();
+  actualMonth: any;
+  actualYear: any;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewDidLoad() {
@@ -52,9 +53,9 @@ export class HotThemesPage {
   }
 
   ionViewWillEnter() {
-    this.storage.get('nickName').then((val) => {
-      this.nickName = val;
-    });
+
+    this.nickName = localStorage.getItem('nickName');
+
     this.topicsHelper = [];
     this.topicNameArray = [];
     this.topicTimeArray = [];
@@ -72,7 +73,6 @@ export class HotThemesPage {
     this.initializeTopics();
   }
 
-
   initializeTopics() {
     this.ref = firebase.database().ref('news/');
     this.ref
@@ -82,6 +82,8 @@ export class HotThemesPage {
 
         let date: Date = new Date();
         this.actualDay = +date.getDate();
+        this.actualMonth = +date.getMonth() + 1;
+        this.actualYear = +date.getFullYear();
 
         for (let prop in this.news) {
           this.topicNameArray.push(this.news[prop].topic);
@@ -101,7 +103,7 @@ export class HotThemesPage {
           this.year[prop] = +splitted[2];
           this.hour[prop] = +splitted[3];
           this.minute[prop] = +splitted[4];
-          if (this.day[prop] == this.actualDay) {
+          if (this.day[prop] == this.actualDay && this.month[prop] == this.actualMonth && this.year[prop] == this.actualYear) {
             this.topics[j] = this.topicNameArray[prop];
             this.dailyTopicsHours[j] = this.hour[prop];
             j++;
@@ -125,9 +127,10 @@ export class HotThemesPage {
           }
         }
 
+
         if (this.topics.length < 15) {
           for (i = 0; this.topics.length != 15; i++) {
-            this.topics.push(this.plusTopics[i]);
+            this.topics.push(this.plusTopics[(this.actualDay-1) + i]); //Other day other array
           }
         }
 
@@ -152,7 +155,7 @@ export class HotThemesPage {
   }
 
   openQuestionListPage(topicName: string) {
-    this.storage.set('topic', topicName);
+    localStorage.setItem('topic', topicName);
     this.navCtrl.push(QuestionListPage);
   }
 

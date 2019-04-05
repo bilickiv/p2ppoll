@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the ThemeChoosePage page.
@@ -18,14 +17,13 @@ export class CategorieChoosePage {
 
   //change list
 
-  sumCheck;
+  sumCheck = 0;
 
   topicNameArray = new Array();
   topicBoolArray = new Array();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController, public storage: Storage) {
-    this.sumCheck = 0;
-    this.topicBoolArray = [];
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
+   this.topicBoolArray = [];
     this.topicNameArray = [];
     this.getDatabase();
 
@@ -33,7 +31,6 @@ export class CategorieChoosePage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ThemeChoosePage');
-    this.sumCheck = 0;
   }
 
   reloadPage() {
@@ -45,7 +42,7 @@ export class CategorieChoosePage {
   * This topics appear at index page.
   */
   choosenLimit(state: boolean, index: number) {
-    this.storage.set('refresh', true);
+    localStorage.setItem('refresh', 'true');
 
     if (state) {
       ++this.sumCheck;
@@ -53,7 +50,6 @@ export class CategorieChoosePage {
       --this.sumCheck;
     }
 
-    console.log(this.sumCheck);
 
     if (this.sumCheck > 15) {
       this.sumCheck = this.sumCheck - 1;
@@ -67,28 +63,23 @@ export class CategorieChoosePage {
   }
 
   setter(index: number, boolvalue: boolean) {
-    this.storage.set('sumcheck', this.sumCheck);
-    this.storage.get('topicBoolArray').then((val) => {
-      this.topicBoolArray[index] = boolvalue;
-      this.storage.set('topicBoolArray', this.topicBoolArray);
-    });
+    localStorage.setItem('sumcheck', JSON.stringify(this.sumCheck));
+    this.topicBoolArray[index] = boolvalue;
+    localStorage.setItem('topicBoolArray', JSON.stringify(this.topicBoolArray));
   }
 
   getDatabase() {
-    this.storage.get('topicNameArray').then((topicNameArray) => {
-      this.storage.get('topicBoolArray').then((topicBoolArray) => {
+    this.topicNameArray = JSON.parse(localStorage.getItem('topicNameArray'));
+    this.topicBoolArray = JSON.parse(localStorage.getItem('topicBoolArray'));
 
-        this.topicNameArray = topicNameArray;
-        this.topicBoolArray = topicBoolArray;
+    for (var i = 0; i < this.topicBoolArray.length; i++) {
+      if (this.topicBoolArray[i]) {
+        this.sumCheck++;
+      }
+    }
 
-        for (var i = 0; i < topicBoolArray.length; i++) {
-          if (topicBoolArray[i]) {
-            this.sumCheck++;
-          }
-        }
-        this.storage.set('sumcheck', this.sumCheck); //reason -> reloadPage
-      });
-    });
+    localStorage.setItem('sumcheck', this.sumCheck.toString());
+
   }
 
   showAlert() {

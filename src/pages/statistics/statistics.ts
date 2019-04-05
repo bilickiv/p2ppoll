@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
 
 import { AllCountryPage } from '../all-country/all-country';
@@ -42,14 +41,11 @@ export class StatisticsPage {
   countryCard: any;
   countryIf: any;
   thirdLabel: string;
-
   canvasSizeHelper: boolean;
 
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.countryIf = true;
   }
-
 
   ionViewWillEnter() {
     this.countryCheck();
@@ -57,13 +53,12 @@ export class StatisticsPage {
   }
 
   countryCheck() {
-    this.storage.get('country').then((country) => {
-      if (country == "Hidden") {
-        this.countryCard = true;
-      } else {
-        this.countryCard = false;
-      }
-    });
+    let country = localStorage.getItem('country');
+    if (country == "Hidden") {
+      this.countryCard = true;
+    } else {
+      this.countryCard = false;
+    }
   }
 
   goSettings() {
@@ -71,152 +66,147 @@ export class StatisticsPage {
   }
 
   chartDraw() {
-    this.storage.get('jsonArray').then((val) => {
+    let jsonArray = JSON.parse(localStorage.getItem('jsonArray'));
+    this.question = jsonArray[1];
+    this.author = jsonArray[8];
+    this.createDate = jsonArray[10];
+    this.modifyDate = jsonArray[11];
+    this.thirdLabel = jsonArray[4];
+    this.sum = jsonArray[5] + jsonArray[6] + jsonArray[7];
 
-      this.question = val[1];
-      this.author = val[8];
-      this.createDate = val[10];
-      this.modifyDate = val[11];
-      this.thirdLabel = val[4];
+    if (jsonArray[6] >= jsonArray[5] && jsonArray[6] >= jsonArray[7]) {
+      this.most = jsonArray[3];
+    }
+    if (jsonArray[7] >= jsonArray[5] && jsonArray[7] >= jsonArray[6]) {
+      this.most = jsonArray[4];
+    }
+    if (jsonArray[5] >= jsonArray[6] && jsonArray[5] >= jsonArray[7]) {
+      this.most = jsonArray[2];
+    }
 
-      this.sum = val[5] + val[6] + val[7];
-      console.log(val[5]);
+    if (this.thirdLabel == "") {
+      this.thirdLabel = "Not used"
+    }
 
-      if (val[6] >= val[5] && val[6] >= val[7]) {
-        this.most = val[3];
+    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
+
+      type: 'doughnut',
+      data: {
+        labels: [jsonArray[2], jsonArray[3], this.thirdLabel],
+        datasets: [{
+          data: [jsonArray[5], jsonArray[6], jsonArray[7]],
+          backgroundColor: [
+            'rgba(249, 166, 2, 0.8)',
+            'rgba(5, 122, 255, 0.8)',
+            'rgba(85, 26, 139, 0.8)',
+          ],
+          hoverBackgroundColor: [
+            "#f9a602",
+            "#057aff",
+            "#551A8B"
+          ]
+        }]
       }
-      if (val[7] >= val[5] && val[7] >= val[6]) {
-        this.most = val[4];
-      }
-      if (val[5] >= val[6] && val[5] >= val[7]) {
-        this.most = val[2];
-      }
-
-      if (this.thirdLabel == "") {
-        this.thirdLabel = "Not used"
-      }
-
-      this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
-
-        type: 'doughnut',
-        data: {
-          labels: [val[2], val[3], this.thirdLabel],
-          datasets: [{
-            data: [val[5], val[6], val[7]],
-            backgroundColor: [
-              'rgba(249, 166, 2, 0.8)',
-              'rgba(5, 122, 255, 0.8)',
-              'rgba(85, 26, 139, 0.8)',
-            ],
-            hoverBackgroundColor: [
-              "#f9a602",
-              "#057aff",
-              "#551A8B"
-            ]
-          }]
-        }
-      });
+    });
 
 
-      this.barChart = new Chart(this.barCanvas.nativeElement, {
+    this.barChart = new Chart(this.barCanvas.nativeElement, {
 
-        type: 'bar',
-        data: {
-          labels: [],
-          datasets: [{
-            label: 'Vote number',
-            data: [],
-            backgroundColor: [
-              'rgba(255, 255, 0, 0.6)',
-              'rgba(30,161,239,0.6)',
-              'rgba(0, 240, 15, 0.6)',
-              'rgba(80, 219, 149, 0.5)',
-              'rgba(47, 47, 162, 0.5)',
-              'rgba(255, 195, 0, 0.8)',
-              'rgba(21, 79, 255, 0.8)',
-              'rgba(88, 24, 69, 0.8)'
-            ],
-          }]
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Vote number',
+          data: [],
+          backgroundColor: [
+            'rgba(255, 255, 0, 0.6)',
+            'rgba(30,161,239,0.6)',
+            'rgba(0, 240, 15, 0.6)',
+            'rgba(80, 219, 149, 0.5)',
+            'rgba(47, 47, 162, 0.5)',
+            'rgba(255, 195, 0, 0.8)',
+            'rgba(21, 79, 255, 0.8)',
+            'rgba(88, 24, 69, 0.8)'
+          ],
+        }]
+      },
+      options: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: ''
         },
-        options: {
-          legend: { display: false },
-          title: {
-            display: true,
-            text: ''
-          },
-          scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true,
-                userCallback: function (label, index, labels) {
-                  // when the floored value is the same as the value we have a whole number
-                  if (Math.floor(label) === label) {
-                    return label;
-                  }
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              userCallback: function (label, index, labels) {
+                // when the floored value is the same as the value we have a whole number
+                if (Math.floor(label) === label) {
+                  return label;
                 }
               }
-            }]
-          }
-
+            }
+          }]
         }
-      });
 
-      var i, j, tmp;
-      j = 0;
-      let helperString = "";
-      for (i = 0; i < val[15].length; i++) {
-        if (val[15][i] == ",") {
-          this.countriesArray[j] = helperString;
-          j++;
-          helperString = "";
-        } else {
-          helperString = helperString + val[15][i];
-        }
       }
-
-      j = 0;
-      helperString = "";
-      for (i = 0; i < val[16].length; i++) {
-        if (val[16][i] == ",") {
-          this.coValuesArray[j] = helperString;
-          j++;
-          helperString = "";
-        } else {
-          helperString = helperString + val[16][i];
-        }
-      }
-
-      for (i = 0; i < this.coValuesArray.length; i++) {  //Convert string to int
-        this.coValuesArray[i] = +this.coValuesArray[i];
-      }
-
-      for (i = this.coValuesArray.length - 1; 0 < i; --i) { // Bubble sort
-        for (j = 0; j < i; ++j) {
-          if (this.coValuesArray[j] < this.coValuesArray[j + 1]) {
-            tmp = this.countriesArray[j];
-            this.countriesArray[j] = this.countriesArray[j + 1];
-            this.countriesArray[j + 1] = tmp;
-
-            tmp = this.coValuesArray[j];
-            this.coValuesArray[j] = this.coValuesArray[j + 1];
-            this.coValuesArray[j + 1] = tmp;
-          }
-        }
-      }
-
-      for (i = 0; i < 3; i++) {
-        if (this.countriesArray[i] != null && this.countriesArray[i] != undefined) {
-          this.barChart.data.datasets[0].data[i] = +this.coValuesArray[i];
-          this.barChart.data.labels[i] = this.countriesArray[i];
-          this.barChart.update();
-        }
-      }
-
-      if (this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null) {
-        this.countryIf = false;
-      }
-
     });
+
+    var i, j, tmp;
+    j = 0;
+    let helperString = "";
+    for (i = 0; i < jsonArray[15].length; i++) {
+      if (jsonArray[15][i] == ",") {
+        this.countriesArray[j] = helperString;
+        j++;
+        helperString = "";
+      } else {
+        helperString = helperString + jsonArray[15][i];
+      }
+    }
+
+    j = 0;
+    helperString = "";
+    for (i = 0; i < jsonArray[16].length; i++) {
+      if (jsonArray[16][i] == ",") {
+        this.coValuesArray[j] = helperString;
+        j++;
+        helperString = "";
+      } else {
+        helperString = helperString + jsonArray[16][i];
+      }
+    }
+
+    for (i = 0; i < this.coValuesArray.length; i++) {  //Convert string to int
+      this.coValuesArray[i] = +this.coValuesArray[i];
+    }
+
+    for (i = this.coValuesArray.length - 1; 0 < i; --i) { // Bubble sort
+      for (j = 0; j < i; ++j) {
+        if (this.coValuesArray[j] < this.coValuesArray[j + 1]) {
+          tmp = this.countriesArray[j];
+          this.countriesArray[j] = this.countriesArray[j + 1];
+          this.countriesArray[j + 1] = tmp;
+
+          tmp = this.coValuesArray[j];
+          this.coValuesArray[j] = this.coValuesArray[j + 1];
+          this.coValuesArray[j + 1] = tmp;
+        }
+      }
+    }
+
+    for (i = 0; i < 3; i++) {
+      if (this.countriesArray[i] != null && this.countriesArray[i] != undefined) {
+        this.barChart.data.datasets[0].data[i] = +this.coValuesArray[i];
+        this.barChart.data.labels[i] = this.countriesArray[i];
+        this.barChart.update();
+      }
+    }
+
+    if (this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null) {
+      this.countryIf = false;
+    }
   }
 
   openAllCountryPage() {
@@ -228,7 +218,7 @@ export class StatisticsPage {
         }
         this.allCountry.push(jsonFile);
       }
-      this.storage.set('allCountry', this.allCountry);
+      localStorage.setItem('allCountry', JSON.stringify(this.allCountry));
       this.navCtrl.push(AllCountryPage);
     }
   }

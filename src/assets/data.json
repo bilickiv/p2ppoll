@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "questioner": "varga1",
+        "question": "This is the first question?",
+        "firstAnswer": "Yes",
+        "secondAnswer": "No",
+        "thirdAnswer": "Maybe"
+    },
+    {
+        "id": 2,
+        "questioner": "varga1",
+        "question": "Which PC brand is best?",
+        "firstAnswer": "Dell",
+        "secondAnswer": "Asus",
+        "thirdAnswer": "Another"
+    },
+    {
+        "id": 3,
+        "questioner": "peter",
+        "question": "This is the first question?",
+        "firstAnswer": "Yes",
+        "secondAnswer": "No",
+        "thirdAnswer": "Maybe"
+    },
+    {
+        "id": 4,
+        "questioner": "laszlo",
+        "question": "This is the first question?",
+        "firstAnswer": "Yes",
+        "secondAnswer": "No",
+        "thirdAnswer": "Maybe"
+    },
+    {
+        "id": 5,
+        "questioner": "ferenc2",
+        "question": "This is the first question?",
+        "firstAnswer": "Yes",
+        "secondAnswer": "No",
+        "thirdAnswer": "Maybe"
+    },
+    {
+        "id": 6,
+        "questioner": "laszlo",
+        "question": "This is the first question?",
+        "firstAnswer": "Yes",
+        "secondAnswer": "No",
+        "thirdAnswer": "Maybe"
+    }
+]

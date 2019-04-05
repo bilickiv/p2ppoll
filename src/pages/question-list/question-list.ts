@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { QuestionPage } from '../question/question';
-import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 import { convertArray } from '../../app/envrionment';
 
@@ -34,7 +33,7 @@ export class QuestionListPage {
   searchItems = new Array();
   isSearchbarOpened = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewWillEnter() {
@@ -48,8 +47,7 @@ export class QuestionListPage {
    *  If report number >= 5, is not listed.
    */
   getData() {
-    this.storage.get('topic').then((val) => {  // Setting topic Name
-      this.topicName = val;
+    this.topicName = localStorage.getItem('topic');
       this.corrTopicName = this.topicName + '/';
       this.ref = firebase.database().ref(this.corrTopicName);
 
@@ -82,7 +80,7 @@ export class QuestionListPage {
           this.wait = false;
           this.refresh = true;
         });
-    });
+
   }
 
   getItems(ev: any) {
@@ -131,7 +129,7 @@ export class QuestionListPage {
 
     console.log("key: ", this.helper.key);
 
-    this.storage.set('jsonArray', this.jsonArray);
+    localStorage.setItem('jsonArray', JSON.stringify(this.jsonArray));
     this.navCtrl.push(QuestionPage);
   }
 
@@ -160,7 +158,7 @@ export class QuestionListPage {
 
     console.log("key: ", this.helper.key);
 
-    this.storage.set('jsonArray', this.jsonArray);
+    localStorage.setItem('jsonArray', JSON.stringify(this.jsonArray));
     this.navCtrl.push(QuestionPage);
   }
 

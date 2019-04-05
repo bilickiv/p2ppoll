@@ -1,3 +1,9 @@
+Node version: v11.2.0
+
+Cordova version: 8.1.1
+
+Config.xml file: 
+
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.connect" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Connect</name>
@@ -20,7 +26,6 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="Orientation" value="portrait" />
     <preference name="SplashScreenDelay" value="3000" />
-    <preference name="InAppBrowserStorageEnabled" value="false" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -91,6 +96,18 @@
     <plugin name="cordova-plugin-x-toast" spec="2.7.2" />
     <plugin name="cordova-plugin-sim" spec="1.3.3" />
     <plugin name="cordova-plugin-screen-orientation" spec="3.0.1" />
-    <plugin name="cordova-sqlite-storage" spec="3.2.0" />
     <engine name="android" spec="7.1.4" />
 </widget>
+
+
+Plugins: 
+
+cordova-plugin-device,cordova-plugin-googleplus,cordova-plugin-ionic-keyboard,cordova-plugin-ionic-webview,cordova-plugin-screen-orientation,cordova-plugin-sim,cordova-plugin-splashscreen,cordova-plugin-statusbar,cordova-plugin-whitelist,cordova-plugin-x-toast,es6-promise-plugin
+
+Error retrieving Android platform information: 
+Android SDK is not set up properly. Make sure that the Android SDK 'tools' and 'platform-tools' directories are in the PATH variable. 
+
+Error: cmd: Command failed with exit code 1 Error output:
+'android' is not recognized as an internal or external command,
+operable program or batch file.
+

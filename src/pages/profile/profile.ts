@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { TabsPage } from '../tabs/tabs';
 
 /**
@@ -22,7 +21,7 @@ export class ProfilePage {
   questionNumber: any;
   country: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
   }
 
   ionViewDidLoad() {
@@ -33,18 +32,10 @@ export class ProfilePage {
   }
 
   getProfileData() {
-    this.storage.get('nickName').then((val) => {
-      this.nickName = val;
-    });
-    this.storage.get('voteNumber').then((val) => {
-      this.voteNumber = val;
-    });
-    this.storage.get('questionNumber').then((val) => {
-      this.questionNumber = val;
-    });
-    this.storage.get('country').then((val) => {
-      this.country = val;
-    });
+    this.nickName = localStorage.getItem('nickName');
+    this.voteNumber = localStorage.getItem('voteNumber');
+    this.questionNumber = localStorage.getItem('questionNumber');
+    this.country = localStorage.getItem('country');
   }
 
   openHome() {

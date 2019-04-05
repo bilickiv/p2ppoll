@@ -1,6 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
 import * as firebase from 'firebase';
 
@@ -18,10 +17,10 @@ import { convertArray } from '../../app/envrionment';
   selector: 'page-my-questions',
   templateUrl: 'my-questions.html',
 })
-export class MyQuestionsPage {
+export class MyQuestionsPage implements AfterViewInit {
 
-  @ViewChild('polarCanvas') polarCanvas;
-  @ViewChild('barCanvas') barCanvas;
+  @ViewChild('polarCanvas') polarCanvas: ElementRef;
+  @ViewChild('barCanvas') barCanvas: ElementRef;
 
   polarChart: any;
   barChart: any;
@@ -56,12 +55,11 @@ export class MyQuestionsPage {
   allCountry = new Array();
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.actualIndex = 0;
     this.bar = true;
     this.previousButton = true;
     this.empty = true;
-    this.draw("null");
   }
 
   ionViewDidLoad() {
@@ -86,142 +84,159 @@ export class MyQuestionsPage {
     console.log("enter");
   }
 
+  ngAfterViewInit() {
+    this.draw("null");
+  }
+
   draw(reason: string) {
 
     this.countries = [];
     this.coValues = [];
     this.allCountry = [];
 
-    this.storage.get('myQuestions').then((myQuestions) => {
+    this.items = JSON.parse(localStorage.getItem('myQuestions'));
 
-      this.items = myQuestions;
+    console.log("length ", this.items.length);
 
-      console.log("length ", this.items.length);
+    console.log(this.items)
 
-      if (this.items.length == 0) {
-        this.polar = false;
-        this.bar = false;
-        this.nextButton = true;
+    if (this.items != undefined && this.items.length != 0) {
+
+    if (this.items.length == 0) {
+      this.polar = false;
+      this.bar = false;
+      this.nextButton = true;
+    }
+
+    if (this.items.length == 1) {
+      this.nextButton = true;
+      this.polar = true;
+      this.bar = true;
+      this.empty = false;
+    }
+
+    if (this.items.length > 1) {
+      this.polar = true;
+      this.bar = true;
+      this.empty = false;
+    }
+
+    if (reason == "next") {
+      ++this.actualIndex;
+      if (this.actualIndex == this.items.length - 1) {
+        this.nextButton = true; //disable <- true
+      }
+    }
+    if (reason == "previous") {
+      --this.actualIndex;
+      if (this.actualIndex == 0) {
+        this.previousButton = true;
+      }
+    }
+    if (reason == "null") {
+      this.actualIndex = 0;
+    }
+    if (reason == "actual") { }
+
+    if (this.items[this.actualIndex] != undefined && this.items[this.actualIndex] != null || this.items.length < this.actualIndex) {
+
+      this.helper = this.items[this.actualIndex];
+      this.question = this.helper.question;
+      this.firstLabel = this.helper.firstAnswer;
+      this.secondLabel = this.helper.secondAnswer;
+      this.thirdLabel = this.helper.thirdAnswer;
+
+      console.log(this.helper.firstAnswer)
+
+      this.firstValue = this.helper.firstValue;
+      this.secondValue = this.helper.secondValue;
+      this.thirdValue = this.helper.thirdValue;
+
+      this.helper = this.items[this.actualIndex];
+
+
+      if (this.thirdLabel == "") {
+        this.thirdLabel = "Not used"
       }
 
-      if (this.items.length == 1) {
-        this.nextButton = true;
-        this.polar = true;
-        this.bar = true;
-        this.empty = false;
-      }
 
-      if (this.items.length > 1) {
-        this.polar = true;
-        this.bar = true;
-        this.empty = false;
-      }
 
-      if (reason == "next") {
-        ++this.actualIndex;
-        if (this.actualIndex == this.items.length - 1) {
-          this.nextButton = true; //disable <- true
+      this.polarChart = new Chart(this.polarCanvas.nativeElement, {
+
+        type: 'polarArea',
+        data: {
+          labels: [this.firstLabel, this.secondLabel, this.thirdLabel],
+          datasets: [{
+            label: '# of Votes',
+            data: [this.firstValue, this.secondValue, this.thirdValue],
+            backgroundColor: [
+              'rgba(249, 166, 2, 0.8)',
+              'rgba(5, 122, 255, 0.8)',
+              'rgba(85, 26, 139, 0.8)',
+            ],
+            hoverBackgroundColor: [
+              "#f9a602",
+              "#057aff",
+              "#551A8B"
+            ]
+          }]
         }
-      }
-      if (reason == "previous") {
-        --this.actualIndex;
-        if (this.actualIndex == 0) {
-          this.previousButton = true;
-        }
-      }
-      if (reason == "null") {
-        this.actualIndex = 0;
-      }
-      if (reason == "actual") { }
+      });
 
-      if (this.items[this.actualIndex] != undefined && this.items[this.actualIndex] != null || this.items.length < this.actualIndex) {
+      this.barChart = new Chart(this.barCanvas.nativeElement, {
 
-        this.helper = this.items[this.actualIndex];
-        this.question = this.helper.question;
-        this.firstLabel = this.helper.firstAnswer;
-        this.secondLabel = this.helper.secondAnswer;
-        this.thirdLabel = this.helper.thirdAnswer;
-
-        this.firstValue = this.helper.firstValue;
-        this.secondValue = this.helper.secondValue;
-        this.thirdValue = this.helper.thirdValue;
-
-        this.helper = this.items[this.actualIndex];
-        this.updateQuestion(this.actualIndex);
-
-        if (this.thirdLabel == "") {
-          this.thirdLabel = "Not used"
-        }
-
-        this.polarChart = new Chart(this.polarCanvas.nativeElement, {
-
-          type: 'polarArea',
-          data: {
-            labels: [this.firstLabel, this.secondLabel, this.thirdLabel],
-            datasets: [{
-              label: '# of Votes',
-              data: [this.firstValue, this.secondValue, this.thirdValue],
-              backgroundColor: [
-                'rgba(249, 166, 2, 0.8)',
-                'rgba(5, 122, 255, 0.8)',
-                'rgba(85, 26, 139, 0.8)',
-              ],
-              hoverBackgroundColor: [
-                "#f9a602",
-                "#057aff",
-                "#551A8B"
-              ]
-            }]
-          }
-        });
-
-        this.barChart = new Chart(this.barCanvas.nativeElement, {
-
-          type: 'bar',
-          data: {
-            labels: [],
-            datasets: [{
-              label: '',
-              data: [],
-              backgroundColor: [
-                'rgba(255, 255, 0, 0.6)',
-                'rgba(30,161,239,0.6)',
-                'rgba(0, 240, 15, 0.6)',
-                'rgba(80, 219, 149, 0.5)',
-                'rgba(47, 47, 162, 0.5)',
-                'rgba(255, 195, 0, 0.8)',
-                'rgba(21, 79, 255, 0.8)',
-                'rgba(88, 24, 69, 0.8)'
-              ],
-            }]
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{
+            label: '',
+            data: [],
+            backgroundColor: [
+              'rgba(255, 255, 0, 0.6)',
+              'rgba(30,161,239,0.6)',
+              'rgba(0, 240, 15, 0.6)',
+              'rgba(80, 219, 149, 0.5)',
+              'rgba(47, 47, 162, 0.5)',
+              'rgba(255, 195, 0, 0.8)',
+              'rgba(21, 79, 255, 0.8)',
+              'rgba(88, 24, 69, 0.8)'
+            ],
+          }]
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: ''
           },
-          options: {
-            legend: { display: false },
-            title: {
-              display: true,
-              text: ''
-            },
-            scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true,
-                  userCallback: function(label, index, labels) {
-                    // when the floored value is the same as the value we have a whole number
-                    if (Math.floor(label) === label) {
-                        return label;
-                    }
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true,
+                userCallback: function (label, index, labels) {
+                  // when the floored value is the same as the value we have a whole number
+                  if (Math.floor(label) === label) {
+                    return label;
                   }
                 }
-              }]
-           }
+              }
+            }]
           }
-        });
+        }
+      });
 
-      } else {
-        //this.nextButton = false;
-      }
 
-    });
+    } else {
+      //this.nextButton = false;
+    }
+    this.updateQuestion(this.actualIndex);
+  } else {
+    this.polar = false;
+      this.bar = false;
+      this.nextButton = true;
+  }
+
+
   }
 
   openAllCountryPage() {
@@ -233,49 +248,53 @@ export class MyQuestionsPage {
         }
         this.allCountry.push(jsonFile);
       }
-      this.storage.set('allCountry', this.allCountry);
+
+      localStorage.setItem('allCountry', JSON.stringify(this.allCountry));
       this.navCtrl.push(AllCountryPage);
     }
   }
 
   updateQuestion(index: number) {
-    this.storage.get('myQuestions').then((myQuestions) => {
-      this.myQuestions = myQuestions;
-      this.corrTopicName = this.helper.catOne + '/';
 
-      this.updatePolarChart(this.helper);
-      this.updateBarChart(this.helper);
 
-      if(this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null){
-        this.bar = false;
-      }
+    this.myQuestions = JSON.parse(localStorage.getItem('myQuestions'));
 
-      this.ref = firebase.database().ref(this.corrTopicName);  // async
+    this.corrTopicName = this.helper.catOne + '/';
 
-      this.ref
-        .once('value')
-        .then(res => {
-          this.coreHelper = convertArray(res);
-          for (let prop in this.coreHelper) {
-            if (this.coreHelper[prop].id == this.helper.id) {
-              this.helper.firstValue = this.coreHelper[prop].firstValue;
-              this.helper.secondValue = this.coreHelper[prop].secondValue;
-              this.helper.thirdValue = this.coreHelper[prop].thirdValue;
-              this.helper.countries = this.coreHelper[prop].countries;
-              this.helper.coValues = this.coreHelper[prop].coValues;
-              this.myQuestions[index] = this.helper;
+    console.log('this.corrTOpName ', this.corrTopicName)
+    this.updatePolarChart(this.helper);
+    this.updateBarChart(this.helper);
 
-              this.storage.set('myQuestions', this.myQuestions);
+    if (this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null) {
+      this.bar = false;
+    }
 
-              this.updatePolarChart(this.helper);
-              this.updateBarChart(this.helper);
-            }
+    this.ref = firebase.database().ref(this.corrTopicName);  // async
+
+    this.ref
+      .once('value')
+      .then(res => {
+        this.coreHelper = convertArray(res);
+        for (let prop in this.coreHelper) {
+          if (this.coreHelper[prop].id == this.helper.id) {
+            this.helper.firstValue = this.coreHelper[prop].firstValue;
+            this.helper.secondValue = this.coreHelper[prop].secondValue;
+            this.helper.thirdValue = this.coreHelper[prop].thirdValue;
+            this.helper.countries = this.coreHelper[prop].countries;
+            this.helper.coValues = this.coreHelper[prop].coValues;
+            this.myQuestions[index] = this.helper;
+
+            localStorage.setItem('myQuestions', JSON.stringify(this.myQuestions));
+
+            this.updatePolarChart(this.helper);
+            this.updateBarChart(this.helper);
           }
+        }
 
-        }).catch(err => {
-          console.log('websocket');
-        });
-    });
+      }).catch(err => {
+        console.log('websocket');
+      });
+
   }
 
   updatePolarChart(helper: any) {
@@ -353,7 +372,7 @@ export class MyQuestionsPage {
         }
       }
 
-      if(this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null){
+      if (this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null) {
         this.bar = false;
       }
     }

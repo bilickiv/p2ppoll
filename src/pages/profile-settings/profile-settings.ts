@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 import { convertArray } from '../../app/envrionment';
 
@@ -36,7 +35,7 @@ export class ProfileSettingsPage {
   permission: boolean = true;
   nPermission: boolean = true;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
     this.getData();
     this.dateSetter();
     this.permission = true;
@@ -48,9 +47,9 @@ export class ProfileSettingsPage {
   }
 
   select() {
-    this.storage.set('country', this.country);
-    this.storage.set('changeCountry', this.changeCountry + 1);
-    this.storage.set('changeMonth', this.month);
+    localStorage.setItem('country', this.country);
+    localStorage.setItem('changeCountry', this.changeCountry + 1);
+    localStorage.setItem('changeMonth', this.month.toString());
   }
 
   dateSetter() {
@@ -64,33 +63,23 @@ export class ProfileSettingsPage {
   */
 
   getData() {
-    this.storage.get('country').then((val) => {
-      this.country = val;
-    });
-    this.storage.get('nickName').then((val) => {
-      this.nickName = val;
-    });
-    this.storage.get('changeMonth').then((changeMonth) => {
-      this.storage.get('change').then((change) => {
-        this.changeMonth = changeMonth;
-        console.log("month", this.changeMonth);
-        this.changeCountry = change;
-        console.log("change ", this.changeCountry);
-        if (this.changeMonth == this.month) {
-          if (this.changeCountry >= 2) {
-            this.permission = false;
-            console.log("permission ", this.permission);
-          }
-        }
-      });
-    });
-    this.storage.get('changeNickname').then((changeNickname) => {
-      this.changeNname = changeNickname;
-      if (this.changeNname > 2) {
-        this.nPermission = false;
+
+    this.country = localStorage.getItem('country');
+    this.nickName = localStorage.getItem('nickName');
+    this.changeMonth = +localStorage.getItem('changeMonth');
+    this.changeCountry = +localStorage.getItem('changeCountry');
+
+    if (this.changeMonth == this.month) {
+      if (this.changeCountry >= 2) {
+        this.permission = false;
+        console.log("permission ", this.permission);
       }
-    })
-    console.log("permission ", this.permission);
+    }
+
+    this.changeNname = +localStorage.getItem('changeNickname');
+    if (this.changeNname > 2) {
+      this.nPermission = false;
+    }
   }
 
 
@@ -137,27 +126,27 @@ export class ProfileSettingsPage {
                   }
                 }
 
-                if (this.sameNickname && data.title == "") {
+                if (this.sameNickname || data.title == "" || data.title.match(/\s/g)) {
                   this.nickNameError();
                 } else {
-                  
-                    this.storage.set('nickName', data.title);
-                    this.nickName = data.title;
 
-                    var jsonFile = {
-                      nickname: this.nickName
-                    };
+                  localStorage.setItem('nickName', data.title);
+                  this.nickName = data.title;
 
-                    this.ref = firebase.database().ref("nicknames/");
-                    let newItem = this.ref.push();
-                    newItem.set(jsonFile);
+                  var jsonFile = {
+                    nickname: this.nickName
+                  };
 
-                    console.log("oldNickname" + this.oldNickName);
-                    console.log("deletedData: " + this.deletedData);
+                  this.ref = firebase.database().ref("nicknames/");
+                  let newItem = this.ref.push();
+                  newItem.set(jsonFile);
 
-                    firebase.database().ref("nicknames/" + this.deletedData.key).remove(); // Delete old nickname from database
-                    this.storage.set('changeNickname', this.changeNname + 1);
-                    this.navCtrl.pop();
+                  console.log("oldNickname" + this.oldNickName);
+                  console.log("deletedData: " + this.deletedData);
+
+                  firebase.database().ref("nicknames/" + this.deletedData.key).remove(); // Delete old nickname from database
+                  localStorage.setItem('changeNickname', this.changeNname + 1);
+                  this.navCtrl.pop();
                 }
               }).catch(err => {
                 console.log('Error');

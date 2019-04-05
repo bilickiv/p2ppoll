@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the AllCountryPage page.
@@ -19,7 +18,7 @@ export class AllCountryPage {
   items: any;
   empty = new Array();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage) {
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
   ionViewWillEnter(){
@@ -32,9 +31,7 @@ export class AllCountryPage {
   }
 
   listCountries(){
-    this.storage.get('allCountry').then((allCountry)=>{
-      this.items = allCountry;
-    });
+    this.items = JSON.parse(localStorage.getItem('allCountry'));
   }
 
 }

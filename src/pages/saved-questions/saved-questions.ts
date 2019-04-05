@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { Chart } from 'chart.js';
@@ -20,10 +20,10 @@ import { AllCountryPage } from '../all-country/all-country';
   selector: 'page-saved-questions',
   templateUrl: 'saved-questions.html',
 })
-export class SavedQuestionsPage {
+export class SavedQuestionsPage implements AfterViewInit {
 
-  @ViewChild('polarCanvas') polarCanvas;
-  @ViewChild('barCanvas') barCanvas;
+  @ViewChild('polarCanvas') polarCanvas: ElementRef;
+  @ViewChild('barCanvas') barCanvas: ElementRef;
 
   polarChart: any;
   barChart: any;
@@ -57,9 +57,9 @@ export class SavedQuestionsPage {
   coValues = new Array();
   allCountry = new Array();
   syncComplete = new Array();
-  
+
   first: number;
-  
+
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, public alertCtrl: AlertController) {
     this.bar = true;
@@ -84,12 +84,13 @@ export class SavedQuestionsPage {
   }
 
   ionViewWillEnter() {
-    console.log("enter");
     this.actualIndex = 0;
     this.previousButton = true;
-    this.empty = true;
-    this.draw("null");
     this.first = 0;
+  }
+
+  ngAfterViewInit() {
+    this.draw("null");
   }
 
   draw(reason: string) {
@@ -98,17 +99,13 @@ export class SavedQuestionsPage {
     this.coValues = [];
     this.allCountry = [];
 
-    this.storage.get('savedQuestions').then((savedQuestions) => {
+    this.savedQuestions = JSON.parse(localStorage.getItem('savedQuestions'));
 
-      if (this.first == 0) { // just first start
-        this.savedQuestions = savedQuestions;
-        this.first++;
-      }
+    this.items = this.savedQuestions;
 
-      this.items = this.savedQuestions;
-
-      console.log("length ", this.items.length);
-
+    if (this.items != undefined && this.items.length != 0) {
+      console.log("benn")
+      console.log(this.items.length);
       if (this.items.length == 0) {
         this.polar = false;
         this.bar = false;
@@ -148,8 +145,6 @@ export class SavedQuestionsPage {
       if (reason == "actual") { }
 
       if (this.items[this.actualIndex] != undefined && this.items[this.actualIndex] != null || this.items.length < this.actualIndex) {
-
-        console.log("define");
         this.helper = this.items[this.actualIndex];
         this.question = this.helper.question;
         this.firstLabel = this.helper.firstAnswer;
@@ -161,7 +156,6 @@ export class SavedQuestionsPage {
         this.thirdValue = this.helper.thirdValue;
 
         this.helper = this.items[this.actualIndex];
-        this.updateQuestion(this.actualIndex);
 
         if (this.thirdLabel == "") {
           this.thirdLabel = "Not used"
@@ -219,15 +213,15 @@ export class SavedQuestionsPage {
               yAxes: [{
                 ticks: {
                   beginAtZero: true,
-                  userCallback: function(label, index, labels) {
+                  userCallback: function (label, index, labels) {
                     // when the floored value is the same as the value we have a whole number
                     if (Math.floor(label) === label) {
-                        return label;
+                      return label;
                     }
                   }
                 }
               }]
-           }
+            }
           }
         });
 
@@ -235,8 +229,13 @@ export class SavedQuestionsPage {
         console.log('else')
         //this.nextButton = false;
       }
+      this.updateQuestion(this.actualIndex);
+    }else {
+      this.polar = false;
+      this.bar = false;
+      this.nextButton = true;
+    }
 
-    });
   }
 
   openAllCountryPage() {
@@ -248,47 +247,45 @@ export class SavedQuestionsPage {
         }
         this.allCountry.push(jsonFile);
       }
-      this.storage.set('allCountry', this.allCountry);
+      localStorage.setItem('allCountry', JSON.stringify(this.allCountry));
       this.navCtrl.push(AllCountryPage);
     }
   }
 
   updateQuestion(index: number) {
-    this.storage.get('savedQuestions').then((savedQuestions) => {
-      this.savedQuestions = savedQuestions;
+    this.savedQuestions = JSON.parse(localStorage.getItem('savedQuestion'));
 
-      this.corrTopicName = this.helper.catOne + '/' + this.helper.key + '/';
-      console.log("corrtopname: ", this.corrTopicName);
 
-      this.updatePolarChart(this.helper);
-      this.updateBarChart(this.helper);
+    this.corrTopicName = this.helper.catOne + '/' + this.helper.key + '/';
+    console.log("corrtopname: ", this.corrTopicName);
 
-      if(this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null){
-        this.bar = false;
-      }
+    this.updatePolarChart(this.helper);
+    this.updateBarChart(this.helper);
 
-      this.ref = firebase.database().ref(this.corrTopicName);  // async
+    if (this.barChart.data.datasets[0].data[0] == "" || this.barChart.data.datasets[0].data[0] == undefined || this.barChart.data.datasets[0].data[0] == null) {
+      this.bar = false;
+    }
 
-      this.ref
-        .once('value')
-        .then(res => {
-          this.coreHelper = res.val();
-          this.helper.firstValue = this.coreHelper.firstValue;
-          this.helper.secondValue = this.coreHelper.secondValue;
-          this.helper.thirdValue = this.coreHelper.thirdValue;
-          this.helper.countries = this.coreHelper.countries;
-          this.helper.coValues = this.coreHelper.coValues;
+    this.ref = firebase.database().ref(this.corrTopicName);  // async
 
-          this.savedQuestions[index] = this.helper;
-          this.storage.set('savedQuestions', this.savedQuestions);
+    this.ref
+      .once('value')
+      .then(res => {
+        this.coreHelper = res.val();
+        this.helper.firstValue = this.coreHelper.firstValue;
+        this.helper.secondValue = this.coreHelper.secondValue;
+        this.helper.thirdValue = this.coreHelper.thirdValue;
+        this.helper.countries = this.coreHelper.countries;
+        this.helper.coValues = this.coreHelper.coValues;
+        this.savedQuestions = JSON.parse(localStorage.getItem('savedQuestions'));
+        this.savedQuestions[index] = this.helper;
+        localStorage.setItem('savedQuestions', JSON.stringify(this.savedQuestions));
+        this.updatePolarChart(this.helper);
+        this.updateBarChart(this.helper);
+      }).catch(err => {
+        console.log('websocket');
+      });
 
-          this.updatePolarChart(this.helper);
-          this.updateBarChart(this.helper);
-
-        }).catch(err => {
-          console.log('websocket');
-        });
-    });
   }
 
   updatePolarChart(helper: any) {
@@ -373,55 +370,59 @@ export class SavedQuestionsPage {
   }
 
 
-  showAlert(){
-      const alert = this.alertCtrl.create({
-        title: 'Delete',
-        subTitle: 'Are you sure you want to delete?',
-        buttons: [
-          {
-            text: 'No',
-            role: 'no',
-            handler: () => {
-            }
-          },
-          {
-            text: 'Yes',
-            role: 'yes',
-            handler: () => {
-              if (this.savedQuestions.length != 0) {
+  showAlert() {
+    const alert = this.alertCtrl.create({
+      title: 'Delete',
+      subTitle: 'Are you sure you want to delete?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'no',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Yes',
+          role: 'yes',
+          handler: () => {
+            this.savedQuestions = JSON.parse(localStorage.getItem('savedQuestions'));
 
-                if (this.actualIndex > -1) {  //Delete
-                  this.savedQuestions.splice(this.actualIndex, 1);
-                }
-          
-                this.storage.set('savedQuestions', this.savedQuestions);
-          
-                if (this.savedQuestions.length == 0) {
-                  this.polar = false;
-                  this.bar = false;
-                  this.previousButton = true;
-                  this.nextButton = true;
-                  this.empty = true;
-                }
-          
-                if (this.savedQuestions.length == 1) {
-                  this.draw("null");
-                  this.previousButton = true;
-                  this.nextButton = true;
-                }
-          
-                if (this.savedQuestions.length > 1) {
-                  this.draw("null");
-                  this.previousButton = true;
-                  this.nextButton = false;
-                }
-          
+            if (this.savedQuestions.length != 0) {
+
+              if (this.actualIndex > -1) {  //Delete
+                this.savedQuestions.splice(this.actualIndex, 1);
               }
+
+              localStorage.setItem('savedQuestions', JSON.stringify(this.savedQuestions));
+
+              if (this.savedQuestions.length == 0) {
+                this.polar = false;
+                this.bar = false;
+                this.previousButton = true;
+                this.nextButton = true;
+                this.empty = true;
+              }
+
+              if (this.savedQuestions.length == 1) {
+                this.draw("null");
+                this.previousButton = true;
+                this.nextButton = true;
+              }
+
+              this.savedQuestions = JSON.parse(localStorage.getItem('savedQuestions'));  
+
+              if (this.savedQuestions.length > 1) {
+                this.draw("null");
+                this.previousButton = true;
+                this.nextButton = false;
+              }
+
             }
           }
-        ]
-      });
-      alert.present();
+        }
+      ]
+    });
+    alert.present();
   }
 
 

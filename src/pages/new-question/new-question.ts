@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angu
 import { QuestionCategorieChoosePage } from '../question-categorie-choose/question-categorie-choose';
 import { TabsPage } from '../tabs/tabs';
 import * as firebase from 'firebase';
-import { Storage } from '@ionic/storage';
 import { convertArray } from '../../app/envrionment';
 
 /**
@@ -66,10 +65,10 @@ export class NewQuestionPage {
   questionHelper: string;
 
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, public alertCtrl: AlertController) {
-    this.storage.set('catOne', null);
-    this.storage.set('catTwo', null);
-    this.storage.set('catThree', null);
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
+    localStorage.setItem('catOne', null);
+    localStorage.setItem('catTwo', null);
+    localStorage.setItem('catThree', null);
     this.limitNumber = 1;
   }
 
@@ -97,30 +96,23 @@ export class NewQuestionPage {
   }
 
   catSetter() {
-    this.storage.get('catOne').then((val) => {
-      this.catOne = val;
-      this.storage.get('catTwo').then((val) => {
-        this.catTwo = val;
-        this.storage.get('catThree').then((val) => {
-          this.catThree = val;
-          this.chooseCategories = this.catOne + ", " + this.catTwo + ", " + this.catThree;
-          console.log(this.chooseCategories);
-          if (this.catOne == null) {
-            this.chooseCategories = "";
-          } else if (this.catTwo == null) {
-            this.chooseCategories = this.catOne;
-          } else if (this.catThree == null) {
-            this.chooseCategories = this.catOne + ", " + this.catTwo;
-          }
-        });
-      });
-    });
+    this.catOne = localStorage.getItem('catOne');
+    this.catTwo = localStorage.getItem('catTwo');
+    this.catThree = localStorage.getItem('catThree');
+    this.chooseCategories = this.catOne + ", " + this.catTwo + ", " + this.catThree;
+    console.log(this.chooseCategories);
+    if (this.catOne == "null") {
+      this.chooseCategories = "";
+    } else if (this.catTwo == "null" || this.catTwo == "undefined") {
+      this.chooseCategories = this.catOne;
+    } else if (this.catThree == "null" || this.catThree == "undefined") {
+      this.chooseCategories = this.catOne + ", " + this.catTwo;
+    }
+
   }
 
   nickNameSetter() {
-    this.storage.get('nickName').then((val) => {
-      this.nickName = val;
-    });
+    this.nickName = localStorage.getItem('nickName');
   }
 
 
@@ -130,7 +122,7 @@ export class NewQuestionPage {
       this.question = this.question.replace(/\?/g, "");
       if (this.question.match(/^[A-Za-z0-9\s-\,]+$/) && this.question.length >= 3) {
         if (this.firstAnswer != this.secondAnswer && this.secondAnswer != this.thirdAnswer && this.firstAnswer != this.thirdAnswer) {
-          if (this.limitNumber < 4) {
+          if (this.limitNumber < 200) {
             this.idGenerator();
 
             if (this.thirdAnswer == null) {
@@ -186,16 +178,16 @@ export class NewQuestionPage {
               }
             }
 
-            this.limits[0] = this.year; // 2 question one day
+            this.limits[0] = this.year;
             this.limits[1] = this.month;
             this.limits[2] = this.day;
             this.limitNumber++;
             this.limits[3] = this.limitNumber;
 
-            this.storage.set('limit', this.limits);
-            this.storage.set('catOne', null);
-            this.storage.set('catTwo', null);
-            this.storage.set('catThree', null);
+            localStorage.setItem('limit', JSON.stringify(this.limits));
+            localStorage.setItem('catOne', null);
+            localStorage.setItem('catTwo', null);
+            localStorage.setItem('catThree', null);
 
             this.ref = firebase.database().ref('news/');
             this.ref
@@ -222,11 +214,9 @@ export class NewQuestionPage {
                 }
               });
 
-            this.storage.get('questionNumber').then((val) => {
-              this.questionNumber = val;
-              this.questionNumber++;
-              this.storage.set('questionNumber', this.questionNumber);
-            });
+
+              this.questionNumber = +localStorage.getItem('questionNumber')
+              localStorage.setItem('questionNumber', this.questionNumber.toString());
 
             jsonFile = {
               id: this.uniqueId, question: this.question, firstAnswer: this.firstAnswer, secondAnswer: this.secondAnswer,
@@ -235,11 +225,9 @@ export class NewQuestionPage {
               catTwo: this.catTwo, catThree: this.catThree, countries: this.countries, coValues: this.coValues
             }
 
-            this.storage.get('myQuestions').then((val) => {
-              this.myQuestions = val;
-              this.myQuestions.push(jsonFile);
-              this.storage.set('myQuestions', this.myQuestions);
-            });
+            this.myQuestions = JSON.parse(localStorage.getItem('myQuestions'));
+            this.myQuestions.push(jsonFile);
+            localStorage.setItem('myQuestions', JSON.stringify(this.myQuestions));
 
             this.navCtrl.setRoot(TabsPage);
           } else {
@@ -283,8 +271,7 @@ export class NewQuestionPage {
   }
 
   limitSetter() {
-    this.storage.get('limit').then((limit) => {
-      this.limits = limit;
+      this.limits = JSON.parse(localStorage.getItem('limit'));
       if (this.limits[0] == this.year) {
         if (this.limits[1] == this.month) {
           if (this.limits[2] == this.day) {
@@ -292,19 +279,19 @@ export class NewQuestionPage {
           } else {
             this.limitNumber = 1;
             this.limits[3] = 1;
-            this.storage.set('limit', this.limits);
+            localStorage.setItem('limit', JSON.stringify(this.limits));
           }
         } else {
           this.limitNumber = 1;
           this.limits[3] = 1;
-          this.storage.set('limit', this.limits);
+          localStorage.setItem('limit', JSON.stringify(this.limits));
         }
       } else {
         this.limitNumber = 1;
         this.limits[3] = 1;
-        this.storage.set('limit', this.limits);
+        localStorage.setItem('limit', JSON.stringify(this.limits));
       }
-    });
+    
 
   }
 

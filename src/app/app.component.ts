@@ -53,12 +53,10 @@ export class MyApp {
     });
   }
 
-
   openPage(page) {
     this.menu.close();
     // navigate to the new page if it is not the current page
     console.log('open page');
-    this.storage.set('animation', 0);
     this.nav.push(page.component);
   }
 }

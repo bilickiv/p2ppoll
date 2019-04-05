@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { StatisticsPage } from '../statistics/statistics';
-import { Storage } from '@ionic/storage';
 import * as firebase from 'firebase';
 import { convertArray } from '../../app/envrionment';
 
@@ -86,7 +85,7 @@ export class QuestionPage {
   report: any;
 
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public storage: Storage, public toastCtrl: ToastController) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public toastCtrl: ToastController) {
   }
 
   ionViewWillEnter() {
@@ -97,40 +96,32 @@ export class QuestionPage {
   }
 
   nickNameSetter() {
-    this.storage.get('nickName').then((val) => {
-      this.nickName = val;
-    });
+    this.nickName = localStorage.getItem('nickName');
   }
 
   getDataFromDatabase() {
     this.lock = true; // vote permission check
     this.votePermission = true;
-    this.storage.get('votedQuestionIds').then((votedQuestionIds) => {
-      this.votedQuestionIds = votedQuestionIds;
-      if (votedQuestionIds != null) {
-        for (var i = 0; i < votedQuestionIds.length; i++) {
-          if (votedQuestionIds[i] == this.id) {
-            this.votePermission = false;
-            this.lock = false;
-            if (this.votedQuestionIds.length > 5000) {
-              this.votedQuestionIds = [];
-              var j = 0;
-              for (i = 2500; i <= 5000; i++) {
-                this.votedQuestionIds[j] = votedQuestionIds[i];
-                j++;
-              }
-              this.storage.set('votedQuestionIds', this.votedQuestionIds);
+    this.votedQuestionIds = JSON.parse(localStorage.getItem('votedQuestionIds'));
+    if (this.votedQuestionIds != null) {
+      for (var i = 0; i < this.votedQuestionIds.length; i++) {
+        if (this.votedQuestionIds[i] == this.id) {
+          this.votePermission = false;
+          this.lock = false;
+          if (this.votedQuestionIds.length > 5000) {
+            this.votedQuestionIds = [];
+            var j = 0;
+            for (i = 2500; i <= 5000; i++) {
+              this.votedQuestionIds[j] = this.votedQuestionIds[i];
+              j++;
             }
+            localStorage.setItem('votedQuestionIds', JSON.stringify(this.votedQuestionIds));
           }
         }
       }
-    });
-    this.storage.get('topic').then((topicName) => {
-      this.topicName = topicName;
-    });
-    this.storage.get('country').then((myCountry) => {
-      this.myCountry = myCountry;
-    })
+    }
+    this.topicName = localStorage.getItem('topic');
+    this.myCountry = localStorage.getItem('country');
   }
 
   openStatisticsPage() {
@@ -147,37 +138,35 @@ export class QuestionPage {
     this.second = document.getElementById('second');
     this.third = document.getElementById('third');
 
-    this.storage.get('jsonArray').then((val) => {
-      this.jsonArray = val;
-      this.id = val[0];
-      this.question = val[1];
-      this.firstAnswer = val[2];
-      this.secondAnswer = val[3];
-      this.thirdAnswer = val[4];
-      this.firstValue = val[5];
-      this.secondValue = val[6];
-      this.thirdValue = val[7];
-      this.author = val[8];
-      this.reportValue = val[9];
-      this.create = val[10];
-      this.modified = val[11];
-      this.catOne = val[12];
-      this.catTwo = val[13];
-      this.catThree = val[14];
-      this.countries = val[15];
-      this.coValues = val[16];
-      this.key = val[17];
+    this.jsonArray = JSON.parse(localStorage.getItem('jsonArray'));
 
-      if (this.thirdAnswer == "" || this.thirdValue == undefined || this.thirdValue == null) {
-        this.thirdOption = false;
-      } else {
-        this.thirdOption = true;
-      }
+    this.id = this.jsonArray[0];
+    this.question = this.jsonArray[1];
+    this.firstAnswer = this.jsonArray[2];
+    this.secondAnswer = this.jsonArray[3];
+    this.thirdAnswer = this.jsonArray[4];
+    this.firstValue = this.jsonArray[5];
+    this.secondValue = this.jsonArray[6];
+    this.thirdValue = this.jsonArray[7];
+    this.author = this.jsonArray[8];
+    this.reportValue = this.jsonArray[9];
+    this.create = this.jsonArray[10];
+    this.modified = this.jsonArray[11];
+    this.catOne = this.jsonArray[12];
+    this.catTwo = this.jsonArray[13];
+    this.catThree = this.jsonArray[14];
+    this.countries = this.jsonArray[15];
+    this.coValues = this.jsonArray[16];
+    this.key = this.jsonArray[17];
 
-      this.storage.set('finalCountries', this.countries);
-      this.storage.set('finalCoValues', this.coValues);
+    if (this.thirdAnswer == "" || this.thirdValue == undefined || this.thirdValue == null) {
+      this.thirdOption = false;
+    } else {
+      this.thirdOption = true;
+    }
 
-    });
+    localStorage.setItem('finalCountries', JSON.stringify(this.countries));
+    localStorage.setItem('finalCoValues', JSON.stringify(this.coValues));
   }
 
   dateSetter() {
@@ -216,17 +205,15 @@ export class QuestionPage {
         this.jsonArray[7] = this.thirdValue;
       }
       this.jsonArray[11] = this.actualDate;
-      this.storage.set('jsonArray', this.jsonArray);
+      localStorage.setItem('jsonArray', JSON.stringify(this.jsonArray));
 
       this.voteTopic(this.catOne, this.answer, "one");
 
       this.votedQuestionIds.push(this.id);
-      this.storage.set('votedQuestionIds', this.votedQuestionIds);
-      this.storage.get('voteNumber').then((val) => {
-        this.myVoteValue = val;
-        this.myVoteValue++;
-        this.storage.set('voteNumber', this.myVoteValue);
-      });
+      localStorage.setItem('votedQuestionIds', JSON.stringify(this.votedQuestionIds));
+      this.myVoteValue = +localStorage.getItem('voteNumber');
+      this.myVoteValue++;
+      localStorage.setItem('voteNumber', this.myVoteValue.toString());
     } else {
       this.showAlert("vote denied");
     }
@@ -324,7 +311,7 @@ export class QuestionPage {
             if (actual == "one") {
               this.jsonArray[15] = this.finalCountries;
               this.jsonArray[16] = this.finalCoValues;
-              this.storage.set('jsonArray', this.jsonArray);
+              localStorage.setItem('jsonArray', JSON.stringify(this.jsonArray));
               this.openStatisticsPage();
               if (this.catTwo != "" && this.catTwo != null && this.catTwo != undefined) {
                 this.voteTopic(this.catTwo, this.answer, "two");
@@ -348,37 +335,32 @@ export class QuestionPage {
 
   save() {
     this.savePermission = true;
-    this.storage.get('savedQuestions').then((val) => {
-      if (val != null && val != undefined && val.length != 0) {
-        for (var i = 0; i < val.length; i++) {
-          if (val[i].id == this.id) {
-            this.savePermission = false;
-          }
+    this.savedQuestions = JSON.parse(localStorage.getItem('savedQuestions'));
+    if ( this.savedQuestions != null &&  this.savedQuestions != undefined &&  this.savedQuestions.length != 0) {
+      for (var i = 0; i <  this.savedQuestions.length; i++) {
+        if ( this.savedQuestions[i].id == this.id) {
+          this.savePermission = false;
         }
       }
-      if (val.length < 30) {
-        if (this.savePermission) {
-
-          var jsonFile = {
-            id: this.id, question: this.question, firstAnswer: this.firstAnswer, secondAnswer: this.secondAnswer,
-            thirdAnswer: this.thirdAnswer, firstValue: this.firstValue, secondValue: this.secondValue, thirdValue: this.thirdValue,
-            author: this.author, report: this.reportValue, create: this.create, modified: this.actualDate, catOne: this.catOne,
-            catTwo: this.catTwo, catThree: this.catThree, countries: this.countries, coValues: this.coValues, key: this.key
-          }
-
-          this.storage.get('savedQuestions').then((val) => {
-            this.savedQuestions = val;
-            this.savedQuestions.push(jsonFile);
-            this.storage.set('savedQuestions', this.savedQuestions);
-          });
-          this.showAlert("save question");
-        } else {
-          this.showAlert("already saved");
+    }
+    if ( this.savedQuestions.length < 30) {
+      if (this.savePermission) {
+        var jsonFile = {
+          id: this.id, question: this.question, firstAnswer: this.firstAnswer, secondAnswer: this.secondAnswer,
+          thirdAnswer: this.thirdAnswer, firstValue: this.firstValue, secondValue: this.secondValue, thirdValue: this.thirdValue,
+          author: this.author, report: this.reportValue, create: this.create, modified: this.actualDate, catOne: this.catOne,
+          catTwo: this.catTwo, catThree: this.catThree, countries: this.countries, coValues: this.coValues, key: this.key
         }
+        this.savedQuestions.push(jsonFile);
+        localStorage.setItem('savedQuestions', JSON.stringify(this.savedQuestions));
+        this.showAlert("save question");
       } else {
-        this.showAlert("limit");
+        this.showAlert("already saved");
       }
-    });
+    } else {
+      this.showAlert("limit");
+    }
+
   }
 
   reportQuestion() {
