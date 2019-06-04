@@ -25,9 +25,9 @@ export class NewQuestionPage {
   secondAnswer: string;
   thirdAnswer: string;
 
-  catOne: string;
-  catTwo: string;
-  catThree: string;
+  catOne: string = null;
+  catTwo: string = null;
+  catThree: string = null;
   nickName: string;
   corrCatName: string;
   chooseCategories: any;
@@ -108,13 +108,11 @@ export class NewQuestionPage {
     } else if (this.catThree == "null" || this.catThree == "undefined") {
       this.chooseCategories = this.catOne + ", " + this.catTwo;
     }
-
   }
 
   nickNameSetter() {
     this.nickName = localStorage.getItem('nickName');
   }
-
 
   send() { //  question, ( first, second, three )x2, author, report, datex
 
@@ -122,19 +120,23 @@ export class NewQuestionPage {
       this.question = this.question.replace(/\?/g, "");
       if (this.question.match(/^[A-Za-z0-9\s-\,]+$/) && this.question.length >= 3) {
         if (this.firstAnswer != this.secondAnswer && this.secondAnswer != this.thirdAnswer && this.firstAnswer != this.thirdAnswer) {
-          if (this.limitNumber < 200) {
+          if (this.limitNumber <= 3) {
             this.idGenerator();
 
             if (this.thirdAnswer == null) {
               this.thirdAnswer = "";
             }
 
-            if (this.catTwo == null) {
+            console.log(this.catTwo)
+
+            if (this.catTwo == null || this.catTwo == "undefined") {
               this.catTwo = "";
+              console.log('catTwo null')
             }
 
-            if (this.catThree == null) {
+            if (this.catThree == null || this.catThree == "undefined") {
               this.catThree = "";
+              console.log('catThree null')
             }
 
             if (this.question[0].match(/^[A-Za-z]+$/)) {
@@ -154,25 +156,25 @@ export class NewQuestionPage {
 
             this.corrCatName = "news/" + this.catOne;
             firebase.database().ref(this.corrCatName).update({ id: this.uniqueId });
+            firebase.database().ref(this.corrCatName).update({ topic: this.catOne }); 
             firebase.database().ref(this.corrCatName).update({ uploadDate: this.uploadDate });
-            this.catOne = this.catOne;
-            this.ref = firebase.database().ref(this.catOne + '/');
+            this.ref = firebase.database().ref('topics/' + this.catOne + '/');
             let newItem = this.ref.push();
             newItem.set(jsonFile);
             if (this.catTwo != "") {
               this.corrCatName = "news/" + this.catTwo;
               firebase.database().ref(this.corrCatName).update({ id: this.uniqueId });
-              firebase.database().ref(this.corrCatName).update({ uploadDate: this.uploadDate });
-              this.catTwo = this.catTwo;
-              this.ref = firebase.database().ref(this.catTwo + '/');
+              firebase.database().ref(this.corrCatName).update({ topic: this.catTwo });
+              firebase.database().ref(this.corrCatName).update({ uploadDate: this.uploadDate });             
+              this.ref = firebase.database().ref('topics/' +this.catTwo + '/');
               let newItem = this.ref.push();
               newItem.set(jsonFile);
               if (this.catThree != "") {
                 this.corrCatName = "news/" + this.catThree;
                 firebase.database().ref(this.corrCatName).update({ id: this.uniqueId });
-                firebase.database().ref(this.corrCatName).update({ uploadDate: this.uploadDate });
-                this.catThree = this.catThree;
-                this.ref = firebase.database().ref(this.catThree + '/');
+                firebase.database().ref(this.corrCatName).update({ topic: this.catThree });
+                firebase.database().ref(this.corrCatName).update({ uploadDate: this.uploadDate });              
+                this.ref = firebase.database().ref('topics/' +this.catThree + '/');
                 let newItem = this.ref.push();
                 newItem.set(jsonFile);
               }
@@ -199,21 +201,23 @@ export class NewQuestionPage {
                   if (this.helper.topic == this.catOne) {
                     this.actualTopicValue = +this.helper.topics;
                     this.actualTopicValue++;
+                    if(this.helper.topics == undefined || this.helper.topics == null || this.helper.topics == 0){ this.actualTopicValue = 1; }
                     firebase.database().ref("news/" + this.catOne).update({ topics: this.actualTopicValue });
                   }
-                  if (this.helper.topic == this.catTwo) {
+                  if (this.helper.topic == this.catTwo && this.catTwo != undefined) {
                     this.actualTopicValue = +this.helper.topics;
                     this.actualTopicValue++;
+                    if(this.helper.topics == undefined || this.helper.topics == null || this.helper.topics == 0){ this.actualTopicValue = 1; }
                     firebase.database().ref("news/" + this.catTwo).update({ topics: this.actualTopicValue });
                   }
-                  if (this.helper.topic == this.catThree) {
+                  if (this.helper.topic == this.catThree && this.catThree != undefined) {
                     this.actualTopicValue = +this.helper.topics;
                     this.actualTopicValue++;
+                    if(this.helper.topics == undefined || this.helper.topics == null || this.helper.topics == 0){ this.actualTopicValue = 1; }
                     firebase.database().ref("news/" + this.catThree).update({ topics: this.actualTopicValue });
                   }
                 }
               });
-
 
               this.questionNumber = +localStorage.getItem('questionNumber')
               localStorage.setItem('questionNumber', this.questionNumber.toString());
@@ -291,8 +295,6 @@ export class NewQuestionPage {
         this.limits[3] = 1;
         localStorage.setItem('limit', JSON.stringify(this.limits));
       }
-    
-
   }
 
   showAlert(reason: string) {

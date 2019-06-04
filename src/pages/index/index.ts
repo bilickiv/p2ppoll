@@ -11,7 +11,6 @@ import { ProfileSettingsPage } from '../profile-settings/profile-settings';
   templateUrl: 'index.html'
 })
 export class IndexPage {
-
   topics = new Array();
   topicsHelper = new Array();
   topicNameArray = new Array();
@@ -36,9 +35,7 @@ export class IndexPage {
   sameNickname: boolean;
   random: number;
   question: string;
-
   fullDatabase: any;
-
 
   constructor(public navCtrl: NavController, public menuCtrl: MenuController, public alertCtrl: AlertController, public errHandler: ErrorHandler, public platform: Platform) {
 
@@ -49,26 +46,10 @@ export class IndexPage {
     this.initializeArrays();
     this.nicknameSetter();
     this.countryCheck();
-
-  }
-
-  /**
-   * Full Firebase database download and save.
-   */
-  fullDownload() {
-    this.ref = firebase.database().ref('/');
-    this.ref
-      .once('value')
-      .then(res => {
-        this.fullDatabase = convertArray(res);
-        console.log("fullDatabase");
-        console.log(this.fullDatabase);
-        localStorage.setItem('fullDatabase', JSON.stringify(this.fullDatabase));
-      });
   }
 
   /** 
-  * This method check country. If hidden, and random == 7, pop up.
+  * This method check country. If hidden, and random == 7(1/20), then pop up.
   */
   countryCheck() {
     this.random = Math.floor((Math.random() * 20) + 1);
@@ -80,14 +61,35 @@ export class IndexPage {
     }
   }
 
-  /*
+  downloadFullDatabase(){
+    var i = 0;
+    this.ref = firebase.database().ref('topics/');
+    this.ref
+    .once('value')
+    .then(res => {
+      this.fullDatabase = convertArray(res);
+      console.log("fullDatabase");
+      console.log(this.fullDatabase);
+      for(let prop in this.fullDatabase){
+        console.log('Add topic ', this.fullDatabase[prop].key);
+        this.topicNameArray[i] = this.fullDatabase[prop].key;
+        i++;
+      }
+      localStorage.setItem('topicNameArray', JSON.stringify(this.topicNameArray));
+    }).catch(err => {
+      console.log('websocket or internet error');
+      localStorage.setItem('firstRunCheck', '0');
+      this.internetError();
+    });
+  }
+
+  /** 
   * This method initialize index page content and database.
   * If this first run, then firstRunCheck variable not 1, start database variables, arrays initalize.
   * Display sort. This method contain firebase reference for new questions. If there is new question, 
   * we change the style.
   */
   initializeArrays() {
-
     this.firstRunCheck = +localStorage.getItem('firstRunCheck');
     this.nickName = localStorage.getItem('nickName');
     let topicBoolArr = localStorage.getItem('topicBoolArray');
@@ -108,14 +110,17 @@ export class IndexPage {
     this.readedTopics = [];
     this.myQuestions = [];
 
+  /**
+   * First run.
+   */
     if (this.firstRunCheck != 1) {
+
       this.topicNameArray = ["animation", "animal", "book", "business", "car", "city", "clothes", "community", "computer",
         "country", "culture", "electronics", "ezoteric", "fashion", "fitness", "food", "friend", "game", "healthy",
         "hobby", "home", "internet", "language", "learning", "life", "love", "money", "movie",
         "music", "nature", "online", "phone", "photo", "problem", "programming",
         "relationship", "school", "science", "social", "technology", "training", "transport", "travel",
         "tvseries", "university", "video", "work"
-
       ];
 
       for (var x = 0; x < this.topicNameArray.length; x++) {
@@ -144,8 +149,7 @@ export class IndexPage {
       localStorage.setItem('savedQuestions', JSON.stringify(this.savedQuestions));
       localStorage.setItem('firstRunCheck', '1');
       localStorage.setItem('topicNameArray', JSON.stringify(this.topicNameArray));
-      localStorage.setItem('topicBoolArray', JSON.stringify(this.topicBoolArray));
-      this.fullDownload(); //full firebase database download
+      localStorage.setItem('topicBoolArray', JSON.stringify(this.topicBoolArray));      
     } else {
       this.topicBoolArray = JSON.parse(topicBoolArr);
       this.topicNameArray = JSON.parse(topicNameArr);
@@ -157,19 +161,18 @@ export class IndexPage {
       } else {
         this.empty = false;
       }
-
     }
 
     var y = 0;
-    for (x = 0; x < this.topicBoolArray.length; x++) {
+    for (var x = 0; x < this.topicBoolArray.length; x++) {
       if (this.topicBoolArray[x]) { // Just selected topics name 
         this.topics[y] = this.topicNameArray[x];
         y++;
       }
     }
 
-    var i, j, tmp;
-    for (i = this.topics.length - 1; 0 < i; --i) { //Sort by text length
+    var j, tmp;
+    for (var i = this.topics.length - 1; 0 < i; --i) { //Sort by text length
       for (j = 0; j < i; ++j) {
         if (this.topics[j].length < this.topics[j + 1].length) {
           tmp = this.topics[j];
@@ -278,7 +281,7 @@ export class IndexPage {
       });
 
     localStorage.setItem('readedTopics', JSON.stringify(this.readedTopics));
-
+    this.downloadFullDatabase();
   }
 
   /*
@@ -484,6 +487,23 @@ export class IndexPage {
         },
         {
           text: 'Go Settings',
+          role: 'Ok',
+          handler: () => {
+            this.navCtrl.push(ProfileSettingsPage);
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  internetError() {
+    const alert = this.alertCtrl.create({
+      title: 'No Connection',
+      subTitle: 'Please check your internet connection, and restart this application!',
+      buttons: [
+        {
+          text: 'Ok',
           role: 'Ok',
           handler: () => {
             this.navCtrl.push(ProfileSettingsPage);

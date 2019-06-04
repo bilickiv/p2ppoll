@@ -259,9 +259,9 @@ export class MyQuestionsPage implements AfterViewInit {
 
     this.myQuestions = JSON.parse(localStorage.getItem('myQuestions'));
 
-    this.corrTopicName = this.helper.catOne + '/';
+    this.corrTopicName = 'topics/' + this.helper.catOne + '/';
 
-    console.log('this.corrTOpName ', this.corrTopicName)
+    console.log('Topic name: ', this.corrTopicName)
     this.updatePolarChart(this.helper);
     this.updateBarChart(this.helper);
 

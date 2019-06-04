@@ -26,7 +26,6 @@ export class CategorieChoosePage {
    this.topicBoolArray = [];
     this.topicNameArray = [];
     this.getDatabase();
-
   }
 
   ionViewDidLoad() {
@@ -49,7 +48,6 @@ export class CategorieChoosePage {
     } else {
       --this.sumCheck;
     }
-
 
     if (this.sumCheck > 15) {
       this.sumCheck = this.sumCheck - 1;

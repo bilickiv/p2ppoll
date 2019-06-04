@@ -48,7 +48,7 @@ export class QuestionListPage {
    */
   getData() {
     this.topicName = localStorage.getItem('topic');
-      this.corrTopicName = this.topicName + '/';
+      this.corrTopicName = 'topics/' + this.topicName + '/';
       this.ref = firebase.database().ref(this.corrTopicName);
 
       this.ref

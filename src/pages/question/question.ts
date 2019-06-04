@@ -121,7 +121,7 @@ export class QuestionPage {
       }
     }
     this.topicName = localStorage.getItem('topic');
-    this.myCountry = localStorage.getItem('country');
+    this.myCountry = localStorage.getItem('country');   
   }
 
   openStatisticsPage() {
@@ -224,7 +224,7 @@ export class QuestionPage {
   */
 
   voteTopic(categorie: string, answer: string, actual: string) {
-    this.corrTopicName = categorie + '/';
+    this.corrTopicName = 'topics/' + categorie + '/';
     this.ref = firebase.database().ref(this.corrTopicName);
 
     this.ref
@@ -433,7 +433,7 @@ export class QuestionPage {
             text: 'Yes',
             role: 'yes',
             handler: () => {
-              this.corrTopicName = this.topicName + '/';
+              this.corrTopicName = 'topics/' +this.topicName + '/';
               this.ref = firebase.database().ref(this.corrTopicName);
 
               this.ref
@@ -444,7 +444,7 @@ export class QuestionPage {
                     this.helper = this.items[prop];
                     if (this.helper.id == this.id) {
                       this.reportValue = this.helper.report;
-                      firebase.database().ref(this.topicName + '/' + this.helper.key).update({ report: this.reportValue + 1 });
+                      firebase.database().ref('topics/' + this.topicName + '/' + this.helper.key).update({ report: this.reportValue + 1 });
                     }
                   }
                 });

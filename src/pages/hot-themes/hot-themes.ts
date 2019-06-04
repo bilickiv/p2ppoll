@@ -53,7 +53,6 @@ export class HotThemesPage {
   }
 
   ionViewWillEnter() {
-
     this.nickName = localStorage.getItem('nickName');
 
     this.topicsHelper = [];
@@ -90,7 +89,8 @@ export class HotThemesPage {
           this.topicTimeArray.push(this.news[prop].uploadDate);
         }
 
-        //Firebase jelenlegi tárolása szerint, pontok mentén lehet vágni
+        //Firebase new
+        //Actual character . then split
         var i, j, k, tmp;
 
         j = 0;
@@ -127,10 +127,9 @@ export class HotThemesPage {
           }
         }
 
-
         if (this.topics.length < 15) {
           for (i = 0; this.topics.length != 15; i++) {
-            this.topics.push(this.plusTopics[(this.actualDay-1) + i]); //Other day other array
+            this.topics.push(this.plusTopics[(this.actualDay-1) + i]); //Other day other array (random)
           }
         }
 
@@ -146,9 +145,7 @@ export class HotThemesPage {
       }).catch(err => {
         console.log('websocket');
       });
-
   }
-
 
   openNewQuestionPage() {
     this.navCtrl.push(NewQuestionPage);
