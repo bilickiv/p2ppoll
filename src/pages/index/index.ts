@@ -149,7 +149,8 @@ export class IndexPage {
       localStorage.setItem('savedQuestions', JSON.stringify(this.savedQuestions));
       localStorage.setItem('firstRunCheck', '1');
       localStorage.setItem('topicNameArray', JSON.stringify(this.topicNameArray));
-      localStorage.setItem('topicBoolArray', JSON.stringify(this.topicBoolArray));      
+      localStorage.setItem('topicBoolArray', JSON.stringify(this.topicBoolArray));   
+      this.downloadFullDatabase();   
     } else {
       this.topicBoolArray = JSON.parse(topicBoolArr);
       this.topicNameArray = JSON.parse(topicNameArr);
@@ -281,7 +282,7 @@ export class IndexPage {
       });
 
     localStorage.setItem('readedTopics', JSON.stringify(this.readedTopics));
-    this.downloadFullDatabase();
+    
   }
 
   /*
