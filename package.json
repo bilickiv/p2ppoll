@@ -31,7 +31,7 @@
     "@ionic/storage": "^2.2.0",
     "angular-tag-cloud-module": "^3.1.0",
     "angularfire2": "^5.1.1",
-    "bower": "^1.8.4",
+    "bower": "^1.8.8",
     "chart.js": "^2.7.3",
     "connect-peer-module": "^1.0.0",
     "cordova-android": "7.1.4",
