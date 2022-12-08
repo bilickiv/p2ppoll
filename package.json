@@ -35,7 +35,7 @@
     "chart.js": "^2.7.3",
     "connect-peer-module": "^1.0.0",
     "cordova-android": "7.1.4",
-    "cordova-browser": "5.0.4",
+    "cordova-browser": "6.0.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-googleplus": "^6.0.0",
     "cordova-plugin-ionic-keyboard": "^2.1.3",
